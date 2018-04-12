@@ -9,7 +9,9 @@ class Candidate extends Model
     protected $fillable = ['name', 'email', 'photo'];
 
     /**
-     * The jobs that belong to the candidate.
+     * The jobs which belong to a candidate.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function jobs()
     {

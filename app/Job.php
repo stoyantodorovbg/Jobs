@@ -9,13 +9,21 @@ class Job extends Model
     protected $fillable = ['title', 'description'];
 
     /**
-     * The candidates that belong to the job.
+     * The candidates who belong to a job.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function candidates()
     {
         return $this->belongsToMany(Candidate::class)->withTimestamps();;
     }
 
+    /**
+     * Search for job candidates by position, for which they applied
+     *
+     * @param string $keyWord
+     * @return \Illuminate\Database\Eloquent\Collection|static[]
+     */
     public static function searchJobCandidates(string $keyWord)
     {
         return static::with('candidates')
@@ -23,6 +31,12 @@ class Job extends Model
             ->get();
     }
 
+    /**
+     * Search for jobs advertisements by title
+     *
+     * @param array $filters
+     * @return mixed
+     */
     public static function searchJobsByTitle(array $filters)
     {
         $title = $filters['title'];
@@ -32,6 +46,12 @@ class Job extends Model
             ->paginate($filters['resultsCount']);
     }
 
+    /**
+     * Search for jobs advertisements by keyword
+     *
+     * @param array $filters
+     * @return mixed
+     */
     public static function searchJobsByKeyWord(array $filters)
     {
         $keyWord = $filters['keyWord'];

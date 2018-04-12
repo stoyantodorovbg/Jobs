@@ -28,7 +28,7 @@ class TableCandidateJob extends Migration
             $table->foreign('job_id')
                 ->references('id')
                 ->on('jobs')
-                ->onDelete('cascade');;
+                ->onDelete('cascade');
 
             $table->timestamps();
         });

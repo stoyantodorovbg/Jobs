@@ -11,13 +11,23 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
-     * The roles which belong to a user
+     * Get the roles which belong to a user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function roles()
     {
         return $this->belongsToMany(Role::class);
+    }
+
+    /**
+     * Get the jobs which belongs to a user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function jobs()
+    {
+        return $this->hasMany(Job::class);
     }
 
     /**

@@ -19,6 +19,11 @@
     Job title: {{ $job->title }}
     <br>
     Job description: {{ $job->description }}
+    <br>
+    Author's name: {{ $job->user->name }}
+    <br>
+    Author's email: {{ $job->user->email }}
+    <br>
 
     @can('update', $job)
         <br>

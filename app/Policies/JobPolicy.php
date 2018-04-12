@@ -14,7 +14,7 @@ class JobPolicy
      * Determine whether the user can create jobs.
      *
      * @param  \App\User  $user
-     * @return mixed
+     * @return bool
      */
     public function create(User $user)
     {
@@ -26,21 +26,23 @@ class JobPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Job  $job
-     * @return mixed
+     * @return bool
      */
     public function update(User $user, Job $job)
     {
         $userRoles = $user->roles;
-        $isAuthenticated = false;
+
+        if($user->id == $job->user_id ) {
+            return true;
+        }
 
         foreach($userRoles as $role) {
             if ($role->name == 'admin' || $role->name == 'moderator') {
-                $isAuthenticated = true;
-                break;
+                return true;
             }
         }
 
-        return $isAuthenticated;
+        return false;
     }
 
     /**
@@ -48,20 +50,22 @@ class JobPolicy
      *
      * @param  \App\User  $user
      * @param  \App\Job  $job
-     * @return mixed
+     * @return bool
      */
     public function delete(User $user, Job $job)
     {
         $userRoles = $user->roles;
-        $isAuthenticated = false;
+
+        if($user->id == $job->user_id ) {
+            return true;
+        }
 
         foreach($userRoles as $role) {
             if ($role->name == 'admin' || $role->name == 'moderator') {
-                $isAuthenticated = true;
-                break;
+                return true;
             }
         }
 
-        return $isAuthenticated;
+        return false;
     }
 }

@@ -9,13 +9,23 @@ class Job extends Model
     protected $fillable = ['title', 'description'];
 
     /**
-     * The candidates who belong to a job.
+     * Get the candidates who belong to a job.
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
     public function candidates()
     {
-        return $this->belongsToMany(Candidate::class)->withTimestamps();;
+        return $this->belongsToMany(Candidate::class)->withTimestamps();
+    }
+
+    /**
+     * Get the user who owns the job.
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**

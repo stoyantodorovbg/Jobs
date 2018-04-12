@@ -23,7 +23,7 @@ class TableCandidateJob extends Migration
             $table->foreign('candidate_id')
                 ->references('id')
                 ->on('candidates')
-                ->onDelete('cascade');;
+                ->onDelete('cascade');
 
             $table->foreign('job_id')
                 ->references('id')

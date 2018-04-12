@@ -18,7 +18,7 @@ class JobsController extends Controller
      */
     public function create()
     {
-        $this->authorize('create');
+        $this->authorize('create', Job::class);
 
         return view('jobs.create');
     }
@@ -32,11 +32,12 @@ class JobsController extends Controller
      */
     public function store(CreateJobRequest $request)
     {
-        $this->authorize('create');
+        $this->authorize('create', Job::class);
 
         $job = new Job();
         $job->title = $request->get('title');
         $job->description = $request->get('description');
+        $job->user()->associate(Auth::user());
         $job->save();
         return redirect()->route('jobs.index');
     }

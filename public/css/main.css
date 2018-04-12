@@ -1,0 +1,8 @@
+ul.pagination {
+    list-style: none;
+}
+
+ul.pagination li {
+    text-decoration: none;
+    display: inline-block;
+}

@@ -2,28 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\ApplyForJobRequest;
-use App\Http\Requests\CreateJobRequest;
 use App\Job;
-use Faker\Provider\Image;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
+use App\Http\Requests\CreateJobRequest;
+use App\Http\Requests\ApplyForJobRequest;
 
 class JobsController extends Controller
 {
-
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        $jobs = Job::all();
-
-        return view('jobs.index', compact('jobs'));
-    }
-
     /**
      * Show the form for creating a new resource.
      *
@@ -47,7 +32,7 @@ class JobsController extends Controller
         $job->description = $request->get('description');
         $job->save();
 
-        return redirect()->route('home.index');
+        return redirect()->route('jobs.index');
     }
 
     /**
@@ -103,7 +88,7 @@ class JobsController extends Controller
     {
         $job->delete();
 
-        return redirect()->route('home.index');
+        return redirect()->route('jobs.index');
     }
 
     /**
@@ -124,12 +109,83 @@ class JobsController extends Controller
 
         $job->candidates()->create($data);
 
-        return redirect()->route('home.index');
+        return redirect()->route('jobs.index');
     }
 
     public function showApply (Job $job)
     {
         return view('jobs.showApply', compact('job'));
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function index(Request $request)
+    {
+        $filters = $this->setFilters($request);
+
+        $jobs = Job::orderBy('updated_at', $filters['orderBy'])->paginate($filters['resultsCount']);
+
+        return view('jobs.index', compact('jobs'));
+    }
+
+    /**
+     * Search jobs by title
+     *
+     * @param Request $request
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function search(Request $request)
+    {
+        $filters = $this->setFilters($request);
+
+        if ($filters['title']) {
+            $jobs = Job::searchJobsByTitle($filters);
+        } else {
+            $jobs = Job::searchJobsByKeyWord($filters);
+        }
+
+        return view('jobs.index', compact('jobs'));
+    }
+
+    /**
+     * set parameters for search
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function setFilters(Request $request)
+    {
+        $orderBy = $request->orderBy;
+        $resultsCount = $request->resultsCount;
+        $keyWord = $request->keyWord;
+        $title = $request->title;
+        $rating = $request->rating;
+
+        if (!$orderBy) {
+            $orderBy = 'desc';
+        }
+
+        if ($rating) {
+            $orderColumn = 'viewCount';
+        } else {
+            $orderColumn = 'updated_at';
+        }
+
+        if(!$resultsCount) {
+            $resultsCount = 3;
+        }
+
+        return [
+            'orderBy' => $orderBy,
+            'orderColumn' => $orderColumn,
+            'resultsCount' => $resultsCount,
+            'keyWord' => $keyWord,
+            'title' => $title,
+            'rating' => $rating,
+        ];
     }
 
     /**

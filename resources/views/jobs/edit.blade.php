@@ -1,8 +1,14 @@
 @extends('layouts.main')
 
 @section('nav')
+
     @parent
-    <a href="{{ route('home.index') }}">All job advertisements</a>
+
+@endsection
+
+@section('nav')
+    @parent
+    <a href="{{ route('jobs.index') }}">All job advertisements</a>
 @endsection
 
 <h1>Edit a job advertisement</h1>

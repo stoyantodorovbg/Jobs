@@ -19,20 +19,26 @@
     Job title: {{ $job->title }}
     <br>
     Job description: {{ $job->description }}
-    <br>
-    <a href="{{ route('jobs.edit', ['job' => $job->id]) }}">Edit</a>
-    <br>
-    <form action="{{ url('jobs', ['id' => $job->id]) }}"
-          method="post"
-    >
 
-        {!! csrf_field() !!}
+    @can('update', $job)
+        <br>
+        <a href="{{ route('jobs.edit', ['job' => $job->id]) }}">Edit</a>
+    @endcan
 
-        <input type="hidden" name="_method" value="delete" />
-        <input type="submit" value="Delete">
-    </form>
+    @can('delete', $job)
+        <br>
+        <form action="{{ url('jobs', ['id' => $job->id]) }}"
+              method="post"
+        >
 
-    <br>
+            {!! csrf_field() !!}
+
+            <input type="hidden" name="_method" value="delete" />
+            <input type="submit" value="Delete">
+        </form>
+        <br>
+    @endcan
+
     Views: {{ $job->viewCount }}
 
     <h3>Candidates:</h3>

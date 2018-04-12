@@ -41,7 +41,9 @@
 @show
 
 @section('nav')
-    <a href="{{ route('jobs.create') }}">Create a job advertisement</a>
+    @can('create', App\Job::class)
+        <a href="{{ route('jobs.create') }}">Create a job advertisement</a>
+    @endcan
     <a href="{{ route('candidates.index') }}">All candidates</a>
 @show
 

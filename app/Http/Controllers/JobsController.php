@@ -6,16 +6,20 @@ use App\Job;
 use Illuminate\Http\Request;
 use App\Http\Requests\CreateJobRequest;
 use App\Http\Requests\ApplyForJobRequest;
+use Illuminate\Support\Facades\Auth;
 
 class JobsController extends Controller
 {
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function create()
     {
+        $this->authorize('create');
+
         return view('jobs.create');
     }
 
@@ -23,15 +27,17 @@ class JobsController extends Controller
      * Store a newly created resource in storage.
      *
      * @param CreateJobRequest $request
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(CreateJobRequest $request)
     {
+        $this->authorize('create');
+
         $job = new Job();
         $job->title = $request->get('title');
         $job->description = $request->get('description');
         $job->save();
-
         return redirect()->route('jobs.index');
     }
 
@@ -52,11 +58,14 @@ class JobsController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Job $job
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Job $job)
     {
+        $this->authorize('update', $job);
         return view('jobs.edit', compact('job'));
+
     }
 
     /**
@@ -65,13 +74,14 @@ class JobsController extends Controller
      * @param CreateJobRequest $request
      * @param Job $job
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(CreateJobRequest $request, Job $job)
     {
+        $this->authorize('update', $job);
+
         $job->title = $request->get('title');
-
         $job->description = $request->get('description');
-
         $job->save();
 
         return view('jobs.show', compact('job'));
@@ -86,6 +96,8 @@ class JobsController extends Controller
      */
     public function destroy(Job $job)
     {
+        $this->authorize('update', $job);
+
         $job->delete();
 
         return redirect()->route('jobs.index');

@@ -23,12 +23,18 @@
         <a href="{{ route('login') }}">Login</a>
         <a href="{{ route('register') }}">Register</a>
     @else
-        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" v-pre>
+        <a href="{{route('users.show', ['user' => Auth::user()])}}"
+           class="dropdown-toggle"
+           data-toggle="dropdown"
+           role="button"
+           aria-expanded="false"
+           aria-haspopup="true" v-pre
+        >
             {{ Auth::user()->name }} <span class="caret"></span>
         </a>
         <a href="{{ route('logout') }}"
            onclick="event.preventDefault();
-                                                    document.getElementById('logout-form').submit();">
+           document.getElementById('logout-form').submit();">
             Logout
         </a>
         <form id="logout-form"
@@ -37,6 +43,9 @@
         >
             {{ csrf_field() }}
         </form>
+        @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator') )
+            <a href="{{ route('users.index') }}">All users</a>
+        @endif
     @endguest
 @show
 

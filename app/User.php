@@ -11,6 +11,24 @@ class User extends Authenticatable
     use Notifiable;
 
     /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'name', 'email', 'password',
+    ];
+
+    /**
+     * The attributes that should be hidden for arrays.
+     *
+     * @var array
+     */
+    protected $hidden = [
+        'password', 'remember_token',
+    ];
+
+    /**
      * Get the roles which belong to a user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
@@ -31,20 +49,21 @@ class User extends Authenticatable
     }
 
     /**
-     * The attributes that are mass assignable.
+     * Check if a user has a role
      *
-     * @var array
+     * @param string $roleName
+     * @return bool
      */
-    protected $fillable = [
-        'name', 'email', 'password',
-    ];
+    public function hasRole(string $roleName)
+    {
+        foreach ($this->roles()->get() as $role)
+        {
+            if ($role->name == $roleName)
+            {
+                return true;
+            }
+        }
 
-    /**
-     * The attributes that should be hidden for arrays.
-     *
-     * @var array
-     */
-    protected $hidden = [
-        'password', 'remember_token',
-    ];
+        return false;
+    }
 }

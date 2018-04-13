@@ -13,8 +13,6 @@
     <!-- Styles -->
     <link href="{{ asset('../../../public/css/main.css') }}"  rel="stylesheet"  type="text/css">
 
-
-
 </head>
 <body>
 
@@ -44,18 +42,26 @@
             {{ csrf_field() }}
         </form>
         @if (Auth::user())
-            <a href="{{ route('users.index') }}">All users</a>
+            <a href="{{ route('users.index') }}">
+                All users
+            </a>
         @endif
     @endguest
 @show
 
 @section('nav')
     @can('create', App\Job::class)
-        <a href="{{ route('jobs.create') }}">Create a job advertisement</a>
+        <a href="{{ route('jobs.create') }}">
+            Create a job advertisement
+        </a>
     @endcan
-    <a href="{{ route('candidates.index') }}">All candidates</a>
-@show
 
+    @if(Auth::user() && (Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator')))
+        <a href="{{ route('candidates.index') }}">
+            All candidates
+        </a>
+    @endif
+@show
 
 <br>
 

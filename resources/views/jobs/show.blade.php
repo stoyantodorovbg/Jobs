@@ -62,7 +62,6 @@
     >
         {{ csrf_field() }}
 
-
         <label>Name: </label>
         <input type="text" name="name" value="{{ old('name') }}">
         <br>

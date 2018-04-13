@@ -8,12 +8,14 @@
 
 @section('nav')
     @parent
-    <a href="{{ route('jobs.index') }}">All job advertisements</a>
+    <a href="{{ route('jobs.index') }}">
+        All job advertisements
+    </a>
 @endsection
 
 @section('content')
 
-    <h1><Ap>    </Ap>Aply</h1>
+    <h1>Aply</h1>
 
     <form action="{{ route('jobs.apply', $job) }}"
           method="post"
@@ -21,7 +23,6 @@
     >
 
         {{ csrf_field() }}
-
 
         <label>Name: </label>
         <input type="text" name="name" value="{{ old('name') }}">

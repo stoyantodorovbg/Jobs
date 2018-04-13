@@ -57,12 +57,16 @@
             <a href="{{ route('jobs.showApply', ['job' => $job->id]) }}">Apply</a>
             <br>
             @if (count($job->candidates) > 0 )
-                <a href="{{ route('candidates.candidatesJob', ['job' => $job->id]) }}">Job's candidates: </a>
+                <a href="{{ route('candidates.candidatesJob', ['job' => $job->id]) }}">
+                    Job's candidates:
+                </a>
                 <br>
             @endif
             Last update: {{ $job->updated_at }}
             <br>
-            <a href="{{ route('jobs.show', ['job' => $job->id]) }}">Job's details</a>
+            <a href="{{ route('jobs.show', ['job' => $job->id]) }}">
+                Job's details
+            </a>
             <br>
             ---------------------
             <br>

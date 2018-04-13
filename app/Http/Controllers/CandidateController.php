@@ -7,6 +7,7 @@ use App\Http\Requests\EditCandidateRequest;
 use App\Job;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 
 class CandidateController extends Controller
 {
@@ -14,9 +15,12 @@ class CandidateController extends Controller
      * Display a listing of the resource.
      *
      * @return Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function index(Request $request)
     {
+        $this->authorize('index', Candidate::class);
+
         $orderBy = $request->orderBy;
         if (!$orderBy) {
             $orderBy = 'desc';
@@ -28,23 +32,16 @@ class CandidateController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
-    {
-        return view('candidates.create');
-    }
-
-    /**
      * Display the specified resource.
      *
      * @param Candidate $candidate
      * @return Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function show(Candidate $candidate)
     {
+        $this->authorize('view', $candidate);
+
         return view('candidates.show', compact('candidate'));
     }
 
@@ -53,9 +50,12 @@ class CandidateController extends Controller
      *
      * @param Candidate $candidate
      * @return Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function edit(Candidate $candidate)
     {
+        $this->authorize('update', $candidate);
+
         return view('candidates.edit', compact('candidate'));
     }
 
@@ -65,9 +65,12 @@ class CandidateController extends Controller
      * @param EditCandidateRequest $request
      * @param Candidate $candidate
      * @return Response
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function update(EditCandidateRequest $request, Candidate $candidate)
     {
+        $this->authorize('update', $candidate);
+
         $candidate->name = $request->get('name');
         $candidate->email = $request->get('email');
         $candidate->save();
@@ -81,9 +84,12 @@ class CandidateController extends Controller
      * @param Candidate $candidate
      * @return Response
      * @throws \Exception
+     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function destroy(Candidate $candidate)
     {
+        $this->authorize('delete', $candidate);
+
         $candidate->delete();
 
         return redirect()->route('candidates.index');
@@ -91,7 +97,7 @@ class CandidateController extends Controller
 
     /**
      *
-     * Display all candidates per one job
+     * Display all candidates for one job
      *
      * @param Job $job
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View

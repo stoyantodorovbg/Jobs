@@ -8,7 +8,9 @@
 
 @section('nav')
     @parent
-    <a href="{{ route('jobs.index') }}">All job advertisements</a>
+    <a href="{{ route('jobs.index') }}">
+        All job advertisements
+    </a>
 @endsection
 
 @section('content')
@@ -32,7 +34,9 @@
         <p>Still you have not published any job advertisement.</p>
     @endforelse
 
-    <a href="{{ route('users.edit', ['user' => $user->id]) }}">Edit</a>
+    <a href="{{ route('users.edit', ['user' => $user->id]) }}">
+        Edit
+    </a>
     <br>
 
 @endsection

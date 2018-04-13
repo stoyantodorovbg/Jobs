@@ -3,7 +3,9 @@
 namespace App\Providers;
 
 use App\Job;
+use App\Candidate;
 use App\Policies\JobPolicy;
+use App\Policies\CandidatePolicy;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -17,6 +19,7 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         Job::class => JobPolicy::class,
+        Candidate::class => CandidatePolicy::class,
     ];
 
     /**

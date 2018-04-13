@@ -16,23 +16,35 @@ class UsersTableSeeder extends Seeder
         $users = factory('App\User', 5)->create();
 
         foreach ($users as $user) {
-            $user->roles()->create(['name' => 'user']);
+            DB::table('role_user')->insert([
+                'role_id' => 1,
+                'user_id' => $user->id,
+            ]);
         }
 
         $moderator = new User();
         $moderator->name = 'Moderator';
         $moderator->email = 'moderator@example.com';
-        $moderator->password = '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm'; // secret
+        $moderator->password = bcrypt('secret');
         $moderator->setRememberToken(str_random(10));
         $moderator->save();
-        $moderator->roles()->create(['name' => 'moderator']);
+
+        DB::table('role_user')->insert([
+            'role_id' => 2,
+            'user_id' => $moderator->id,
+        ]);
 
         $admin = new User();
         $admin->name = 'Admin';
         $admin->email = 'admin@example.com';
-        $admin->password = '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm'; // secret
+        $admin->password = bcrypt('secret');
         $admin->setRememberToken(str_random(10));
         $admin->save();
-        $admin->roles()->create(['name' => 'moderator']);
+
+        DB::table('role_user')->insert([
+            'role_id' => 3,
+            'user_id' => $admin->id,
+        ]);
+
     }
 }

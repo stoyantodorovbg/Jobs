@@ -30,16 +30,13 @@ class JobPolicy
      */
     public function update(User $user, Job $job)
     {
-        $userRoles = $user->roles;
-
         if($user->id == $job->user_id ) {
             return true;
         }
 
-        foreach($userRoles as $role) {
-            if ($role->name == 'admin' || $role->name == 'moderator') {
-                return true;
-            }
+        if ($user->hasRole('admin') || $user->hasRole('moderator')) {
+
+            return true;
         }
 
         return false;
@@ -54,16 +51,13 @@ class JobPolicy
      */
     public function delete(User $user, Job $job)
     {
-        $userRoles = $user->roles;
-
         if($user->id == $job->user_id ) {
             return true;
         }
 
-        foreach($userRoles as $role) {
-            if ($role->name == 'admin' || $role->name == 'moderator') {
-                return true;
-            }
+        if ($user->hasRole('admin') || $user->hasRole('moderator')) {
+
+            return true;
         }
 
         return false;

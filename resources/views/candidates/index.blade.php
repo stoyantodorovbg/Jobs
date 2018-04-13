@@ -7,8 +7,12 @@
 @endsection
 
 @section('nav')
-    <a href="{{ route('jobs.create') }}">Create a job advertisement</a>
-    <a href="{{ route('jobs.index') }}">All job advertisements</a>
+    <a href="{{ route('jobs.create') }}">
+        Create a job advertisement
+    </a>
+    <a href="{{ route('jobs.index') }}">
+        All job advertisements
+    </a>
 @endsection
 
 @section('content')
@@ -45,7 +49,6 @@
         <br>
         ------------
         <br>
-
 
     @endforeach
 

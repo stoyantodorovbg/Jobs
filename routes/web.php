@@ -19,11 +19,14 @@ Route::post('/jobs/{job}/apply', 'JobsController@apply')->name('jobs.apply');
 Route::get('/', 'JobsController@index')->name('jobs.index');
 Route::post('/search', 'JobsController@search')->name('jobs.search');
 
+Route::get('/users', 'UserController@index')->name('users.index')->middleware('verifyAuthenticated');
+Route::get('/users/{user}', 'UserController@show')->name('users.show')->middleware('verifyUser');
+Route::get('/users/{user}/edit', 'UserController@edit')->name('users.edit')->middleware('verifyUser');
+Route::put('/users/{user}', 'UserController@update')->name('users.update')->middleware('verifyUser');
+
 Route::resource('jobs', 'JobsController');
 
 Route::resource('candidates', 'CandidateController');
-
-Route::resource('users', 'UserController');
 
 Auth::routes();
 

@@ -43,7 +43,7 @@
         >
             {{ csrf_field() }}
         </form>
-        @if (Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator') )
+        @if (Auth::user())
             <a href="{{ route('users.index') }}">All users</a>
         @endif
     @endguest

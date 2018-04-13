@@ -28,12 +28,9 @@ class JobsController extends Controller
      *
      * @param CreateJobRequest $request
      * @return \Illuminate\Http\RedirectResponse
-     * @throws \Illuminate\Auth\Access\AuthorizationException
      */
     public function store(CreateJobRequest $request)
     {
-        $this->authorize('create', Job::class);
-
         $job = new Job();
         $job->title = $request->get('title');
         $job->description = $request->get('description');

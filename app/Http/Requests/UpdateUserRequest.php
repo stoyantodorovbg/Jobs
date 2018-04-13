@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
+
 class UpdateUserRequest extends FormRequest
 {
     /**
@@ -13,7 +14,7 @@ class UpdateUserRequest extends FormRequest
      */
     public function authorize()
     {
-        return true;
+        return \Illuminate\Support\Facades\Gate::allows('manage_user_profile');
     }
 
     /**
@@ -25,7 +26,7 @@ class UpdateUserRequest extends FormRequest
     {
         return [
             'name' => 'required|string',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email',
         ];
     }
 }

@@ -20,8 +20,11 @@
         <br>
         User email: {{ $user->email }}
         <br>
-        <a href="{{ route('users.show', ['user' => $user->id]) }}">Details</a>
-        <br>
+
+        @if(Auth::user()->hasRole('admin') || Auth::user()->hasRole('moderator'))
+            <a href="{{ route('users.show', ['user' => $user->id]) }}">Details</a>
+            <br>
+        @endif
         ------------
         <br>
 

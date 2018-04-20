@@ -41,11 +41,12 @@
         >
             {{ csrf_field() }}
         </form>
-        @if (Auth::user())
-            <a href="{{ route('users.index') }}">
-                All users
-            </a>
-        @endif
+        <a href="{{ route('users.index') }}">
+            All users
+        </a>
+        <a href="{{ route('messages.create') }}">
+            Write a message to an user
+        </a>
     @endguest
 @show
 

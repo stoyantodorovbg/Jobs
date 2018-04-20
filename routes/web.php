@@ -28,6 +28,8 @@ Route::resource('jobs', 'JobsController');
 
 Route::resource('candidates', 'CandidateController');
 
+Route::resource('messages', 'MessageController');
+
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');

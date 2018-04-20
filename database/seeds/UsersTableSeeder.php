@@ -13,7 +13,7 @@ class UsersTableSeeder extends Seeder
      */
     public function run()
     {
-        $users = factory('App\User', 5)->create();
+        $users = factory('App\User', 10)->create();
 
         foreach ($users as $user) {
             DB::table('role_user')->insert([

@@ -22,9 +22,11 @@ class CandidateController extends Controller
         $this->authorize('index', Candidate::class);
 
         $orderBy = $request->orderBy;
+
         if (!$orderBy) {
             $orderBy = 'desc';
         }
+
         $candidate = new Candidate();
         $candidates = $candidate->orderBy('created_at', $orderBy)->get();
 

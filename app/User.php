@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Role;
+use App\Http\Models\Message;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -29,7 +30,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the roles which belong to a user
+     * Get the roles which belong to an user
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
      */
@@ -39,13 +40,23 @@ class User extends Authenticatable
     }
 
     /**
-     * Get the jobs which belongs to a user
+     * Get the jobs which belongs to an user
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
     public function jobs()
     {
         return $this->hasMany(Job::class);
+    }
+
+    /**
+     * Get the sent and received messages of an user
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function messages()
+    {
+        return $this->belongsToMany(Message::class)->withPivot('message_id', 'user_id', 'is_sent', 'is_received');
     }
 
     /**

@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Candidate;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -25,6 +26,9 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Candidate::created(function ($candidate) {
+
+        });
         parent::boot();
 
         //

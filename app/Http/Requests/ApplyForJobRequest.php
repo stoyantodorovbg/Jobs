@@ -25,8 +25,8 @@ class ApplyForJobRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email|unique:candidates,email',
-            'photo' => 'required|image|mimes:jpeg,jpg',
+            'email' => 'required|email',
+            'photo' => 'required|image|mimes:jpeg,jpg,png',
         ];
     }
 }

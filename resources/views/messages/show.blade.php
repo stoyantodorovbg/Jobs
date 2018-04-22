@@ -13,7 +13,7 @@
 @endsection
 
 @section('content')
-
+    @foreach($message->users as $user)
         @if ($user->pivot->is_sent == 1)
             <p>Sender: {{ $user->name }}</p>
         @else

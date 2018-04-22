@@ -3,12 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Job;
+use App\Candidate;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateJobRequest;
 use App\Http\Requests\ApplyForJobRequest;
-use Illuminate\Support\Facades\Auth;
 
-class JobsController extends Controller
+class JobController extends Controller
 {
     /**
      * Show the form for creating a new resource.
@@ -113,11 +114,13 @@ class JobsController extends Controller
     {
         $filename = $this->uploadImage($request, $job);
 
-        $data = $request->only(['name', 'email']);
+        $candidate = new Candidate();
+        $candidate->name = $request->get('name');
+        $candidate->email = $request->get('email');
+        $candidate->photo = $filename;
+        $candidate->employerEmail = $job->user->email;
 
-        $data['photo'] = $filename;
-
-        $job->candidates()->create($data);
+        $job->candidates()->save($candidate);
 
         return redirect()->route('jobs.index');
     }

@@ -2,23 +2,26 @@
 
 namespace App\Mail;
 
+use App\Candidate;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class SentJobApplication extends Mailable
+class JobApplication extends Mailable
 {
     use Queueable, SerializesModels;
+
+    public $candidate;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(Candidate $candidate)
     {
-        //
+        $this->candidate = $candidate;
     }
 
     /**
@@ -28,6 +31,9 @@ class SentJobApplication extends Mailable
      */
     public function build()
     {
-        return $this->view('view.name');
+        $candidateEmail = $this->candidate->email;
+        return $this->from("$candidateEmail")
+            ->with(compact($this->candidate))
+            ->markdown('emails.jobApplication');
     }
 }

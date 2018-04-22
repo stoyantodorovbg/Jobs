@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Candidate extends Model
 {
+    public $employerEmail;
+
     protected $fillable = ['name', 'email', 'photo'];
 
     /**

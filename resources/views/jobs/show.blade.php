@@ -25,6 +25,8 @@
     Author's email: {{ $job->user->email }}
     <br>
 
+    <div id="map" style="width: 400px; height: 300px"></div>
+
     @can('update', $job)
         <br>
         <a href="{{ route('jobs.edit', ['job' => $job->id]) }}">Edit</a>
@@ -79,4 +81,23 @@
     @endforeach
 
 @endsection
+
+<script>
+    function initMap() {
+        var coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(';');
+        var coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 15,
+            center: coordinates
+        });
+        var marker = new google.maps.Marker({
+            position: coordinates,
+            map: map
+        });
+    }
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8&callback=initMap">
+</script>
+
 

@@ -17,6 +17,7 @@ class CreateJobsTable extends Migration
             $table->increments('id');
             $table->string('title', 255);
             $table->text('description');
+            $table->string('coordinates');
             $table->integer('viewCount')->default(0);
             $table->integer('user_id')->unsigned();
             $table->timestamps();

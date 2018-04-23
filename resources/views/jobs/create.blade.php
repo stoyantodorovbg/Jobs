@@ -24,7 +24,10 @@
     <label>Description: </label>
     <input type="text" name="description">
     <br>
-    <input type="submit" value="Create">
+    <div id="map" style="width: 400px; height: 300px"></div>
+    <input type="hidden" name="coordinates" id="coordinates">
+
+    <input type="submit" onclick='saveData()' value="Create">
     </form>
 
     @foreach ($errors->all() as $error)
@@ -32,4 +35,30 @@
     @endforeach
 
 @endsection
+
+<script>
+    function initMap() {
+        var sofia = { lat: 42.698334, lng: 23.319941 };
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 9,
+            center: sofia
+        });
+
+        google.maps.event.addListener(map, 'click', function(event) {
+            marker = new google.maps.Marker({
+                position: event.latLng,
+                map: map
+            });
+        });
+    }
+
+    function saveData() {
+        var latlng = marker.getPosition();
+        document.getElementById('coordinates').setAttribute('value', latlng.lat().toFixed(6) + ';' + latlng.lng().toFixed(6));
+    }
+
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8&callback=initMap">
+</script>
 

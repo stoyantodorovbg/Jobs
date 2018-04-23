@@ -77,7 +77,7 @@ class CandidateController extends Controller
         $candidate->email = $request->get('email');
         $candidate->save();
 
-        return redirect()->route('candidates.show', ['candidate' => $candidate]);
+        return redirect()->route('candidates.show', compact('candidate'));
     }
 
     /**

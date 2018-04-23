@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateJobRequest;
 use App\Http\Requests\ApplyForJobRequest;
 
-class JobController extends Controller
+class JobsController extends Controller
 {
     /**
      * Show the form for creating a new resource.
@@ -35,9 +35,10 @@ class JobController extends Controller
         $job = new Job();
         $job->title = $request->get('title');
         $job->description = $request->get('description');
+        $job->coordinates = $request->get('coordinates');
         $job->user()->associate(Auth::user());
         $job->save();
-        return redirect()->route('jobs.index');
+        return redirect()->route('jobs.show', compact('job'));
     }
 
     /**

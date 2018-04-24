@@ -47,16 +47,17 @@
     </form>
 
     <br>
-    <div id="map" style="width: 400px; height: 300px"></div>
-    <input type="hidden" name="coordinates" id="coordinates">
-    <button onclick="hideOuterJobs()">Filter by location</button>
-    <br>
     <textarea
             name="area"
             id="search_area"
             style="width: 350px; height: 200px"
     >
         </textarea>
+    <br>
+    <div id="map" style="width: 400px; height: 300px"></div>
+    <input type="hidden" name="coordinates" id="coordinates">
+    <button onclick="hideOuterJobs()">Filter by location</button>
+    <br>
 
     <h1>Job advertisements: </h1>
 
@@ -94,14 +95,14 @@
     function initMap() {
         var sofia = { lat: 42.698334, lng: 23.319941 };
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 12,
+            zoom: 10,
             center: sofia
         });
 
         var area_coordinates = [
             new google.maps.LatLng(42.698334, 23.319941),
-            new google.maps.LatLng(42.688334, 23.359941),
-            new google.maps.LatLng(42.678334, 23.299941)
+            new google.maps.LatLng(42.656023, 23.365434),
+            new google.maps.LatLng(42.657129, 23.282088)
         ];
 
         // Construct the polygon.
@@ -130,6 +131,21 @@
                 map: map
             });
         });
+
+        var marker;
+        var coordinates;
+        var coordinates_arr;
+
+        @foreach ($jobs as $job)
+        coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(', ');
+        coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};
+        marker = new google.maps.Marker({
+                position: coordinates,
+                map: map
+            });
+        @endforeach
+
+
     }
 
     // set search job area input
@@ -149,6 +165,8 @@
         @foreach ($jobs as $job)
             if (!ifJobIsInPolygon({!! json_encode($job->coordinates) !!})) {
                 $('#job{{ $job->id }}').hide();
+            } else {
+            $('#job{{ $job->id }}').show();
             }
         @endforeach
     }

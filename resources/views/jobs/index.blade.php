@@ -46,10 +46,22 @@
         <input type="submit" value="Search">
     </form>
 
+    <br>
+    <div id="map" style="width: 400px; height: 300px"></div>
+    <input type="hidden" name="coordinates" id="coordinates">
+    <button onclick="hideOuterJobs()">Filter by location</button>
+    <br>
+    <textarea
+            name="area"
+            id="search_area"
+            style="width: 350px; height: 200px"
+    >
+        </textarea>
+
     <h1>Job advertisements: </h1>
 
     @foreach ($jobs as $job)
-        <section>
+        <section id="job{{ $job->id }}">
             Job title: {{ $job->title }}
             <br>
             Views: {{ $job->viewCount }}
@@ -76,4 +88,81 @@
     {{ $jobs->links() }}
 
 @endsection
+
+<script>
+    polygon = '';
+    function initMap() {
+        var sofia = { lat: 42.698334, lng: 23.319941 };
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 12,
+            center: sofia
+        });
+
+        var area_coordinates = [
+            new google.maps.LatLng(42.698334, 23.319941),
+            new google.maps.LatLng(42.688334, 23.359941),
+            new google.maps.LatLng(42.678334, 23.299941)
+        ];
+
+        // Construct the polygon.
+        polygon = new google.maps.Polygon({
+            paths: area_coordinates,
+            draggable: true,
+            editable: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 1,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35
+        });
+
+        // add some event listeners
+        google.maps.event.addListener(polygon, "dragend", searchJobAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "insert_at", searchJobAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "remove_at", searchJobAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "set_at", searchJobAreaInput);
+
+        polygon.setMap(map);
+
+        google.maps.event.addListener(map, 'click', function(event) {
+            marker = new google.maps.Marker({
+                position: event.latLng,
+                map: map
+            });
+        });
+    }
+
+    // set search job area input
+    function searchJobAreaInput() {
+        var number_of_coordinates = polygon.getPath().getLength(),
+            string = '';
+
+        for (var i = 0; i < number_of_coordinates; i++) {
+            string += polygon.getPath().getAt(i).toUrlValue(6) + ';\n';
+        }
+
+        document.getElementById('search_area').textContent = string;
+    }
+
+    // hide the jobs which are outside of the selected area on the map
+    function hideOuterJobs() {
+        @foreach ($jobs as $job)
+            if (!ifJobIsInPolygon({!! json_encode($job->coordinates) !!})) {
+                $('#job{{ $job->id }}').hide();
+            }
+        @endforeach
+    }
+
+    // check if a job coordinates are within selected area on the map
+    function ifJobIsInPolygon(coordinates) {
+        coordinateArr = coordinates.split(', ');
+        var coordinate = new google.maps.LatLng(Number(coordinateArr[0]), Number(coordinateArr[1]));
+
+        return google.maps.geometry.poly.containsLocation(coordinate, polygon);
+    }
+
+</script>
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8&libraries=geometry&callback=initMap">
+</script>
 

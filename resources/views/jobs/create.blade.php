@@ -27,7 +27,7 @@
     <div id="map" style="width: 400px; height: 300px"></div>
     <input type="hidden" name="coordinates" id="coordinates">
 
-    <input type="submit" onclick='saveData()' value="Create">
+    <input type="submit" onclick='getCoordinates()' value="Create">
     </form>
 
     @foreach ($errors->all() as $error)
@@ -37,6 +37,7 @@
 @endsection
 
 <script>
+    // initializes the map on the #map div
     function initMap() {
         var sofia = { lat: 42.698334, lng: 23.319941 };
         var map = new google.maps.Map(document.getElementById('map'), {
@@ -52,9 +53,10 @@
         });
     }
 
-    function saveData() {
+    // set marker coordinates in the request
+    function getCoordinates() {
         var latlng = marker.getPosition();
-        document.getElementById('coordinates').setAttribute('value', latlng.lat().toFixed(6) + ';' + latlng.lng().toFixed(6));
+        document.getElementById('coordinates').setAttribute('value', latlng.lat().toFixed(6) + ', ' + latlng.lng().toFixed(6));
     }
 
 </script>

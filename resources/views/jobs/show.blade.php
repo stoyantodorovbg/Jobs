@@ -84,7 +84,7 @@
 
 <script>
     function initMap() {
-        var coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(';');
+        var coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(', ');
         var coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 15,

@@ -42,7 +42,7 @@ class Job extends Model
     }
 
     /**
-     * Search for jobs advertisements by title
+     * Search for job advertisements by title
      *
      * @param array $filters
      * @return mixed
@@ -57,7 +57,7 @@ class Job extends Model
     }
 
     /**
-     * Search for jobs advertisements by keyword
+     * Search for job advertisements by keyword
      *
      * @param array $filters
      * @return mixed

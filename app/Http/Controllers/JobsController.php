@@ -133,6 +133,7 @@ class JobsController extends Controller
 
     /**
      * Display a listing of the resource.
+     * Search for jobs by title
      *
      * @return \Illuminate\Http\Response
      */
@@ -140,32 +141,45 @@ class JobsController extends Controller
     {
         $filters = $this->setFilters($request);
 
-        $jobs = Job::orderBy('updated_at', $filters['orderBy'])->paginate($filters['resultsCount']);
-
-        return view('jobs.index', compact('jobs'));
-    }
-
-    /**
-     * Search jobs by title
-     *
-     * @param Request $request
-     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
-     */
-    public function search(Request $request)
-    {
-        $filters = $this->setFilters($request);
-
         if ($filters['title']) {
             $jobs = Job::searchJobsByTitle($filters);
-        } else {
+        } elseif ($filters['keyWord']) {
             $jobs = Job::searchJobsByKeyWord($filters);
+        } else {
+            $jobs = Job::orderBy('updated_at', $filters['orderBy'])->paginate($filters['resultsCount']);
         }
 
         return view('jobs.index', compact('jobs'));
     }
 
+
     /**
-     * set parameters for search
+     * Display all job locations
+     *
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function jobLocations()
+    {
+        $locations = Job::all()->pluck('coordinates', 'id');
+
+        return view('jobs.locations', compact('locations'));
+    }
+
+    /**
+     * Retrieve jobs by selected locations
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function selectedLocations(Request $request)
+    {
+        $jobs = Job::find($request->ids);
+
+        return response()->json(array('jobs'=> $jobs), 200);
+    }
+
+    /**
+     * Set parameters for search
      *
      * @param Request $request
      * @return array

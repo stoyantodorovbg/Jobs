@@ -15,38 +15,6 @@
 @section('content')
 
     <br>
-
-    <form action="{{ route('jobs.search', ['orderBy' => 'asc']) }}"
-          method="post"
-    >
-
-        {!! csrf_field() !!}
-
-        <label>Order by last update date</label>
-        <select name="orderBy">
-            <option>asc</option>
-            <option>desc</option>
-        </select>
-        <br>
-        <label>Order by rating</label>
-        <input type="checkbox" name="rating">
-        <br>
-        <label>Results per page </label>
-        <select name="resultsCount">
-            <option>10</option>
-            <option>4</option>
-        </select>
-        <br>
-        <label>Search by key word</label>
-        <input type="text" name="keyWord">
-        <br>
-        <label>Search by title</label>
-        <input type="text" name="title">
-        <br>
-        <input type="submit" value="Search">
-    </form>
-
-    <br>
     <textarea
             name="area"
             id="search_area"
@@ -55,44 +23,37 @@
         </textarea>
     <br>
     <div id="map" style="width: 400px; height: 300px"></div>
-    <input type="hidden" name="coordinates" id="coordinates">
-    <button onclick="hideOuterJobs()">Filter jobs on this page by location</button>
-    <a href="{{ route('jobs.locations') }}">
-        <button>View all job locations</button>
-    </a>
-    <br>
-    <h1>Job advertisements: </h1>
+    <button onclick="displaySelectedJobs()">Display selected jobs</button>
 
-    @foreach ($jobs as $job)
-        <section id="job{{ $job->id }}">
-            Job title: {{ $job->title }}
-            <br>
-            Views: {{ $job->viewCount }}
-            <br>
-            <a href="{{ route('jobs.showApply', ['job' => $job->id]) }}">Apply</a>
-            <br>
-            @if (count($job->candidates) > 0 )
-                <a href="{{ route('candidates.candidatesJob', ['job' => $job->id]) }}">
-                    Job's candidates:
-                </a>
-                <br>
-            @endif
-            Last update: {{ $job->updated_at }}
-            <br>
-            <a href="{{ route('jobs.show', ['job' => $job->id]) }}">
-                Job's details
-            </a>
-            <br>
-            ---------------------
-            <br>
-        </section>
-    @endforeach
-
-    {{ $jobs->links() }}
+    <div id="jobs"></div>
 
 @endsection
 
 <script>
+    function renderSelectedJobs(jobs) {
+        $('#jobs').empty();
+        var title, viewCount, apply, lastUpdate, details;
+        for (var job of jobs) {
+            title = $('<p></p>').text(`Title: ${job.title}`);
+            viewCount = $('<p></p>').text(`Views: ${job.viewCount}`);
+            apply = $('<a></a>').text('Apply').attr('href', `/jobs/${job.id}/showApply` );
+            lastUpdate = $('<p></p>').text(`Last update: ${job.updated_at}`);
+            details = $('<a></a>').text('Details').attr('href', `/jobs/${job.id}`);
+
+            job = $('<div></div>');
+            job.append(title);
+            job.append(viewCount);
+            job.append(apply);
+            job.append(lastUpdate);
+            job.append(details);
+
+            $('#jobs').append(job);
+        }
+    }
+</script>
+
+<script>
+
     polygon = '';
     function initMap() {
         var sofia = { lat: 42.698334, lng: 23.319941 };
@@ -134,17 +95,18 @@
             });
         });
 
-        var marker;
-        var coordinates;
-        var coordinates_arr;
+        var marker,
+        coordinates,
+        coordinates_arr;
 
-        @foreach ($jobs as $job)
-        coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(', ');
+        @foreach ($locations as $location)
+
+            coordinates_arr = JSON.parse('{!! json_encode($location) !!}').split(', ');
         coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};
         marker = new google.maps.Marker({
-                position: coordinates,
-                map: map
-            });
+            position: coordinates,
+            map: map
+        });
         @endforeach
     }
 
@@ -160,15 +122,37 @@
         document.getElementById('search_area').textContent = string;
     }
 
-    // hide the jobs which are outside of the selected area on the map
-    function hideOuterJobs() {
-        @foreach ($jobs as $job)
-            if (!ifJobIsInPolygon({!! json_encode($job->coordinates) !!})) {
-                $('#job{{ $job->id }}').hide();
-            } else {
-                $('#job{{ $job->id }}').show();
+    function displaySelectedJobs() {
+        var data = {'ids': filterSelectedLocations()};
+        console.log(data);
+        $.ajax(
+            {
+                type: 'GET',
+                url: '{{ url('/jobs/selected') }}',
+                data: data,
+                success: function (result) {
+                    console.log(result['jobs']);
+                    renderSelectedJobs(result['jobs']);
+                },
+                error: function () {
+                    console.log('error');
+                }
             }
+        );
+
+
+    }
+
+    // filter selected job locations
+    function filterSelectedLocations() {
+        var selectedLocations = [];
+        @foreach ($locations as $id => $location)
+        if (ifJobIsInPolygon({!! json_encode($location) !!})) {
+            selectedLocations.push({!! json_encode($id) !!});
+        }
         @endforeach
+
+        return selectedLocations;
     }
 
     // check if a job coordinates are within selected area on the map
@@ -183,4 +167,3 @@
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8&libraries=geometry&callback=initMap">
 </script>
-

@@ -17,7 +17,9 @@ Route::post('/candidates/search', 'CandidateController@search')->name('candidate
 Route::get('/jobs/{job}/showApply', 'JobsController@showApply')->name('jobs.showApply');
 Route::post('/jobs/{job}/apply', 'JobsController@apply')->name('jobs.apply');
 Route::get('/', 'JobsController@index')->name('jobs.index');
-Route::post('/search', 'JobsController@search')->name('jobs.search');
+Route::post('/', 'JobsController@index')->name('jobs.search');
+Route::get('/jobs/locations', 'JobsController@jobLocations')->name('jobs.locations');
+Route::get('/jobs/selected', 'JobsController@selectedLocations');
 
 Route::get('/users', 'UserController@index')->name('users.index')->middleware('verifyAuthenticated');
 Route::get('/users/{user}', 'UserController@show')->name('users.show')->middleware('verifyUser');

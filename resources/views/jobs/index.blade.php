@@ -47,13 +47,6 @@
     </form>
 
     <br>
-    <textarea
-            name="area"
-            id="search_area"
-            style="width: 350px; height: 200px"
-    >
-        </textarea>
-    <br>
     <div id="map" style="width: 400px; height: 300px"></div>
     <input type="hidden" name="coordinates" id="coordinates">
     <button onclick="hideOuterJobs()">Filter jobs on this page by location</button>
@@ -119,12 +112,6 @@
             fillOpacity: 0.35
         });
 
-        // add some event listeners
-        google.maps.event.addListener(polygon, "dragend", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "insert_at", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "remove_at", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "set_at", searchJobAreaInput);
-
         polygon.setMap(map);
 
         google.maps.event.addListener(map, 'click', function(event) {
@@ -134,9 +121,7 @@
             });
         });
 
-        var marker;
-        var coordinates;
-        var coordinates_arr;
+        var marker, coordinates, coordinates_arr;
 
         @foreach ($jobs as $job)
         coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(', ');
@@ -146,18 +131,6 @@
                 map: map
             });
         @endforeach
-    }
-
-    // set search job area input
-    function searchJobAreaInput() {
-        var number_of_coordinates = polygon.getPath().getLength(),
-            string = '';
-
-        for (var i = 0; i < number_of_coordinates; i++) {
-            string += polygon.getPath().getAt(i).toUrlValue(6) + ';\n';
-        }
-
-        document.getElementById('search_area').textContent = string;
     }
 
     // hide the jobs which are outside of the selected area on the map

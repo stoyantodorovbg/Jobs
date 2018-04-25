@@ -14,13 +14,7 @@
 
 @section('content')
 
-    <br>
-    <textarea
-            name="area"
-            id="search_area"
-            style="width: 350px; height: 200px"
-    >
-        </textarea>
+
     <br>
     <div id="map" style="width: 400px; height: 300px"></div>
     <button onclick="displaySelectedJobs()">Display selected jobs</button>
@@ -28,29 +22,6 @@
     <div id="jobs"></div>
 
 @endsection
-
-<script>
-    function renderSelectedJobs(jobs) {
-        $('#jobs').empty();
-        var title, viewCount, apply, lastUpdate, details;
-        for (var job of jobs) {
-            title = $('<p></p>').text(`Title: ${job.title}`);
-            viewCount = $('<p></p>').text(`Views: ${job.viewCount}`);
-            apply = $('<a></a>').text('Apply').attr('href', `/jobs/${job.id}/showApply` );
-            lastUpdate = $('<p></p>').text(`Last update: ${job.updated_at}`);
-            details = $('<a></a>').text('Details').attr('href', `/jobs/${job.id}`);
-
-            job = $('<div></div>');
-            job.append(title);
-            job.append(viewCount);
-            job.append(apply);
-            job.append(lastUpdate);
-            job.append(details);
-
-            $('#jobs').append(job);
-        }
-    }
-</script>
 
 <script>
 
@@ -80,12 +51,6 @@
             fillOpacity: 0.35
         });
 
-        // add some event listeners
-        google.maps.event.addListener(polygon, "dragend", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "insert_at", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "remove_at", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "set_at", searchJobAreaInput);
-
         polygon.setMap(map);
 
         google.maps.event.addListener(map, 'click', function(event) {
@@ -95,43 +60,27 @@
             });
         });
 
-        var marker,
-        coordinates,
-        coordinates_arr;
+        var marker, coordinates, coordinates_arr;
 
         @foreach ($locations as $location)
-
             coordinates_arr = JSON.parse('{!! json_encode($location) !!}').split(', ');
-        coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};
-        marker = new google.maps.Marker({
-            position: coordinates,
-            map: map
-        });
+            coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};
+            marker = new google.maps.Marker({
+                position: coordinates,
+                map: map
+            });
         @endforeach
     }
 
-    // set search job area input
-    function searchJobAreaInput() {
-        var number_of_coordinates = polygon.getPath().getLength(),
-            string = '';
-
-        for (var i = 0; i < number_of_coordinates; i++) {
-            string += polygon.getPath().getAt(i).toUrlValue(6) + ';\n';
-        }
-
-        document.getElementById('search_area').textContent = string;
-    }
-
+    // Get jobs by selected coordinates
     function displaySelectedJobs() {
         var data = {'ids': filterSelectedLocations()};
-        console.log(data);
         $.ajax(
             {
                 type: 'GET',
                 url: '{{ url('/jobs/selected') }}',
                 data: data,
                 success: function (result) {
-                    console.log(result['jobs']);
                     renderSelectedJobs(result['jobs']);
                 },
                 error: function () {
@@ -139,13 +88,12 @@
                 }
             }
         );
-
-
     }
 
     // filter selected job locations
     function filterSelectedLocations() {
         var selectedLocations = [];
+
         @foreach ($locations as $id => $location)
         if (ifJobIsInPolygon({!! json_encode($location) !!})) {
             selectedLocations.push({!! json_encode($id) !!});
@@ -161,6 +109,30 @@
         var coordinate = new google.maps.LatLng(Number(coordinateArr[0]), Number(coordinateArr[1]));
 
         return google.maps.geometry.poly.containsLocation(coordinate, polygon);
+    }
+
+    // Display the jobs with selected coordinates on the map
+    function renderSelectedJobs(jobs) {
+        $('#jobs').empty();
+        var title, viewCount, apply, lastUpdate, details, separator;
+        for (var job of jobs) {
+            title = $('<h3></h3>').text(`Title: ${job.title}`);
+            viewCount = $('<p></p>').text(`Views: ${job.viewCount}`);
+            apply = $('<a></a>').text('Apply').attr('href', `/jobs/${job.id}/showApply` );
+            lastUpdate = $('<p></p>').text(`Last update: ${job.updated_at}`);
+            details = $('<a></a>').text('Details').attr('href', `/jobs/${job.id}`);
+            separator = $('<p></p>').text('---------');
+
+            job = $('<div></div>');
+            job.append(title);
+            job.append(viewCount);
+            job.append(apply);
+            job.append(lastUpdate);
+            job.append(details);
+            job.append(separator);
+
+            $('#jobs').append(job);
+        }
     }
 
 </script>

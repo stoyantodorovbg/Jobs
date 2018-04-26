@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\CreateJobRequest;
 use App\Http\Requests\ApplyForJobRequest;
+use Nitmedia\Wkhtml2pdf\Facades\Wkhtml2pdf;
 
 class JobsController extends Controller
 {
@@ -120,6 +121,11 @@ class JobsController extends Controller
         $job->candidates()->save($candidate);
 
         return redirect()->route('jobs.index');
+    }
+
+    public function jobApplicationPDF(Candidate $candidate)
+    {
+        return Wkhtml2pdf::html('candidates.candidate_pdf', compact('candidate'), 'job-application.pdf');
     }
 
     public function showApply (Job $job)

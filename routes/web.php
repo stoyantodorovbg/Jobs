@@ -16,6 +16,7 @@ Route::post('/candidates/search', 'CandidateController@search')->name('candidate
 
 Route::get('/jobs/{job}/showApply', 'JobsController@showApply')->name('jobs.showApply');
 Route::post('/jobs/{job}/apply', 'JobsController@apply')->name('jobs.apply');
+Route::get('/jobs/{candidate}/job-application-pdf','JobsController@jobApplicationPDF')->name('jobs.job-application-pdf');
 Route::get('/', 'JobsController@index')->name('jobs.index');
 Route::post('/', 'JobsController@index')->name('jobs.search');
 Route::get('/jobs/locations', 'JobsController@jobLocations')->name('jobs.locations');

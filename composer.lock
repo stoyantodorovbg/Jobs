@@ -4,8 +4,8 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e335e7efdf3ea203da239965e21c6dea",
-    "content-hash": "074364ef941f997ef8aedcf46b5b8365",
+    "hash": "484d05afe3287df556f97b31530edeb9",
+    "content-hash": "7f23e67bd3fdf69f6d6e7d41c0082068",
     "packages": [
         {
             "name": "dnoegel/php-xdg-base-dir",
@@ -994,16 +994,16 @@
         },
         {
             "name": "nesbot/carbon",
-            "version": "1.26.4",
+            "version": "1.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/briannesbitt/Carbon.git",
-                "reference": "e3d9014279133a3cccc01f6a691322a2d5a6a87b"
+                "reference": "ef81c39b67200dcd7401c24363dcac05ac3a4fe9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/e3d9014279133a3cccc01f6a691322a2d5a6a87b",
-                "reference": "e3d9014279133a3cccc01f6a691322a2d5a6a87b",
+                "url": "https://api.github.com/repos/briannesbitt/Carbon/zipball/ef81c39b67200dcd7401c24363dcac05ac3a4fe9",
+                "reference": "ef81c39b67200dcd7401c24363dcac05ac3a4fe9",
                 "shasum": ""
             },
             "require": {
@@ -1038,7 +1038,7 @@
                 "datetime",
                 "time"
             ],
-            "time": "2018-04-17 15:35:42"
+            "time": "2018-04-23 09:02:57"
         },
         {
             "name": "nikic/php-parser",
@@ -2777,6 +2777,54 @@
             "time": "2017-10-19 19:58:43"
         },
         {
+            "name": "nitmedia/wkhtml2pdf",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/NitMedia/wkhtml2pdf.git",
+                "reference": "586df81dcbeb75b092dc35f9e8b3ef940d66e05a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/NitMedia/wkhtml2pdf/zipball/586df81dcbeb75b092dc35f9e8b3ef940d66e05a",
+                "reference": "586df81dcbeb75b092dc35f9e8b3ef940d66e05a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Nitmedia\\Wkhtml2pdf": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nithin Meppurathu",
+                    "email": "admin@nitmedia.com"
+                }
+            ],
+            "description": "Html 2 Pdf - using wkhtml2pdf, work on 32bit and 64 bit linux + MacOS",
+            "keywords": [
+                "illuminate",
+                "laravel",
+                "pdf",
+                "wkhtml2pdf",
+                "wkhtmltopdf"
+            ],
+            "time": "2017-03-06 14:34:44"
+        },
+        {
             "name": "phar-io/manifest",
             "version": "1.0.1",
             "source": {
@@ -4180,7 +4228,9 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "nitmedia/wkhtml2pdf": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {

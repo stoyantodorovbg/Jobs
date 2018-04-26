@@ -17,15 +17,11 @@
 
     <h1>Candidate</h1>
 
-    Candidate name: {{ $candidate->name }}
-    <br>
-    Candidate email: {{ $candidate->email }}
-    <br>
-    <img width="100px" src="{{ asset('storage/'.$candidate->photo) }}">
-    <br>
+    <p>Candidate name: {{ $candidate->name }}</p>
+    <p>Candidate email: {{ $candidate->email }}</p>
+    <img src="{{ asset('storage/'.$candidate->photo) }}" style="width: 100px" alt="{{ $candidate->name }}">
 
     <a href="{{ route('candidates.edit', ['candidate' => $candidate->id]) }}">Edit</a>
-    <br>
 
     <form action="{{ url('candidates', ['id' => $candidate->id]) }}"
           method="post">
@@ -35,5 +31,7 @@
         {!! csrf_field() !!}
         <input type="submit" value="Delete">
     </form>
+
+    <a href="{{ route('jobs.job-application-pdf', ['candidate' => $candidate->id]) }}">Get job application data as a .pdf file</a>
 
 @endsection

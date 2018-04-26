@@ -142,9 +142,7 @@ class JobsController extends Controller
      */
     public function jobApplicationSavePDF(Candidate $candidate)
     {
-        $date = date("Y-m-d H:i:s");
-        Wkhtml2pdf::setOutputMode('F');
-        Wkhtml2pdf::html('candidates.candidate_pdf', compact('candidate'), "/home/developer/PhpstormProjects/JobsApp/JobsApp/storage/app/public/$date.pdf");
+        $candidate->saveCandidatePDF();
         return redirect()->route('candidates.show', compact('candidate'));
     }
 

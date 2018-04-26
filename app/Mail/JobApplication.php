@@ -31,9 +31,14 @@ class JobApplication extends Mailable
      */
     public function build()
     {
-        $candidateEmail = $this->candidate->email;
+        $candidate = $this->candidate;
+        $pathToPDF = $candidate->saveCandidatePDF();
+
+        $candidateEmail = $candidate->email;
+
         return $this->from("$candidateEmail")
             ->with(compact($this->candidate))
+            ->attach($pathToPDF)
             ->markdown('emails.jobApplication');
     }
 }

@@ -32,6 +32,9 @@
         <input type="submit" value="Delete">
     </form>
 
-    <a href="{{ route('jobs.job-application-pdf', ['candidate' => $candidate->id]) }}">Get job application data as a .pdf file</a>
+    <a href="{{ route('jobs.job-application-pdf-view', ['candidate' => $candidate->id]) }}">Get job application data as a .pdf file</a>
+    <br>
+    <a href="{{ route('jobs.job-application-pdf-save', ['candidate' => $candidate->id]) }}">Save job application data as a .pdf file</a>
+
 
 @endsection

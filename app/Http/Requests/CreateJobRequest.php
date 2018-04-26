@@ -26,6 +26,7 @@ class CreateJobRequest extends FormRequest
         return [
             'title' => 'required|string',
             'description' => 'required|string',
+            'coordinates' => 'required|string|regex:/^[0-9.,\s]+$/u',
         ];
     }
 }

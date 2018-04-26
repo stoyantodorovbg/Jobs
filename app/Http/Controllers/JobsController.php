@@ -123,9 +123,29 @@ class JobsController extends Controller
         return redirect()->route('jobs.index');
     }
 
-    public function jobApplicationPDF(Candidate $candidate)
+    /**
+     * Generate a .pdf file in the browser with job candidate data
+     *
+     * @param Candidate $candidate
+     * @return mixed
+     */
+    public function jobApplicationViewPDF (Candidate $candidate)
     {
-        return Wkhtml2pdf::html('candidates.candidate_pdf', compact('candidate'), 'job-application.pdf');
+        return Wkhtml2pdf::html('candidates.candidate_pdf', compact('candidate'));
+    }
+
+    /**
+     * Save a .pdf file with job candidate data
+     *
+     * @param Candidate $candidate
+     * @return \Illuminate\Http\RedirectResponse
+     */
+    public function jobApplicationSavePDF(Candidate $candidate)
+    {
+        $date = date("Y-m-d H:i:s");
+        Wkhtml2pdf::setOutputMode('F');
+        Wkhtml2pdf::html('candidates.candidate_pdf', compact('candidate'), "/home/developer/PhpstormProjects/JobsApp/JobsApp/storage/app/public/$date.pdf");
+        return redirect()->route('candidates.show', compact('candidate'));
     }
 
     public function showApply (Job $job)

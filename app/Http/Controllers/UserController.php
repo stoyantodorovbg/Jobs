@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\UpdateUserRequest;
+
 use App\User;
-use Illuminate\Http\Request;
+use App\Http\Requests\UpdateUserRequest;
 
 class UserController extends Controller
 {
@@ -51,8 +51,7 @@ class UserController extends Controller
      */
     public function update(UpdateUserRequest $request, User $user)
     {
-        $user->name = $request->get('name');
-        $user->email = $request->get('email');
+        $user->fill($request->all());
         $user->save();
 
         return redirect()->route('users.show', compact('user'));

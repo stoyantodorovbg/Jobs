@@ -32,12 +32,10 @@ class JobsController extends Controller
      */
     public function store(CreateJobRequest $request)
     {
-        $job = new Job();
-        $job->title = $request->get('title');
-        $job->description = $request->get('description');
-        $job->coordinates = $request->get('coordinates');
+        $job = Job::make($request->all());
         $job->user()->associate(Auth::user());
         $job->save();
+
         return redirect()->route('jobs.show', compact('job'));
     }
 
@@ -51,6 +49,7 @@ class JobsController extends Controller
     {
         $job->viewCount = $job->viewCount + 1;
         $job->save();
+
         return view('jobs.show', compact('job'));
     }
 
@@ -64,8 +63,8 @@ class JobsController extends Controller
     public function edit(Job $job)
     {
         $this->authorize('update', $job);
-        return view('jobs.edit', compact('job'));
 
+        return view('jobs.edit', compact('job'));
     }
 
     /**
@@ -80,8 +79,7 @@ class JobsController extends Controller
     {
         $this->authorize('update', $job);
 
-        $job->title = $request->get('title');
-        $job->description = $request->get('description');
+        $job->fill($request->all());
         $job->save();
 
         return view('jobs.show', compact('job'));
@@ -115,9 +113,7 @@ class JobsController extends Controller
     {
         $filename = $this->uploadImage($request, $job);
 
-        $candidate = new Candidate();
-        $candidate->name = $request->get('name');
-        $candidate->email = $request->get('email');
+        $candidate = Candidate::make($request->all());
         $candidate->photo = $filename;
         $candidate->employerEmail = $job->user->email;
 
@@ -141,13 +137,7 @@ class JobsController extends Controller
     {
         $filters = $this->setFilters($request);
 
-        if ($filters['title']) {
-            $jobs = Job::searchJobsByTitle($filters);
-        } elseif ($filters['keyWord']) {
-            $jobs = Job::searchJobsByKeyWord($filters);
-        } else {
-            $jobs = Job::orderBy('updated_at', $filters['orderBy'])->paginate($filters['resultsCount']);
-        }
+        $jobs = $this->search($filters);
 
         return view('jobs.index', compact('jobs'));
     }
@@ -179,40 +169,43 @@ class JobsController extends Controller
     }
 
     /**
+     * Search by set or default filters
+     *
+     * @param array $filters
+     * @return mixed
+     */
+    protected function search (array $filters)
+    {
+        if ($filters['title']) {
+
+            return Job::searchJobsByTitle($filters);
+        } elseif ($filters['keyWord']) {
+
+            return Job::searchJobsByKeyWord($filters);
+        }
+
+        return Job::orderBy($filters['orderColumn'], $filters['orderBy'])->paginate($filters['resultsCount']);
+    }
+
+    /**
      * Set parameters for search
      *
      * @param Request $request
      * @return array
      */
-    public function setFilters(Request $request)
+    protected function setFilters(Request $request)
     {
-        $orderBy = $request->orderBy;
-        $resultsCount = $request->resultsCount;
-        $keyWord = $request->keyWord;
-        $title = $request->title;
-        $rating = $request->rating;
-
-        if (!$orderBy) {
-            $orderBy = 'desc';
-        }
-
-        if ($rating) {
-            $orderColumn = 'viewCount';
-        } else {
-            $orderColumn = 'updated_at';
-        }
-
-        if(!$resultsCount) {
-            $resultsCount = 3;
-        }
+        $order_by = $request->orderBy ? $request->orderBy : 'desc';
+        $order_column = $request->rating ? 'viewCount': 'updated_at';
+        $results_count = $request->resultsCount ? $request->resultsCount : 3;
 
         return [
-            'orderBy' => $orderBy,
-            'orderColumn' => $orderColumn,
-            'resultsCount' => $resultsCount,
-            'keyWord' => $keyWord,
-            'title' => $title,
-            'rating' => $rating,
+            'orderBy' => $order_by,
+            'orderColumn' => $order_column,
+            'resultsCount' => $results_count,
+            'keyWord' => $request->keyWord,
+            'title' => $request->title,
+            'rating' => $request->rating,
         ];
     }
 
@@ -226,15 +219,11 @@ class JobsController extends Controller
     protected function uploadImage (ApplyForJobRequest $request, Job $job)
     {
         if ($request->photo != '') {
-            $photo = $request->photo;
-
-            $filename = explode('/', $photo->store('public'));
+            $filename = explode('/', $request->photo->store('public'));
 
             return $filename[1];
-        } else {
-           return redirect()->route('jobs.show', ['job' => $job]);
         }
 
-        return '';
+        return redirect()->route('jobs.show', ['job' => $job]);
     }
 }

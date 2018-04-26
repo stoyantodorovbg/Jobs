@@ -27,12 +27,12 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        /**
-         * When a candidate applies to a job
-         */
-        Candidate::created(function ($candidate) {
-            $this->sendEmailForJobApplication($candidate);
-        });
+//        /**
+//         * When a candidate applies to a job
+//         */
+//        Candidate::created(function ($candidate) {
+//            $this->sendEmailForJobApplication($candidate);
+//        });
         parent::boot();
 
         //

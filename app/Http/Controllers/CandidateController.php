@@ -2,12 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Candidate;
-use App\Http\Requests\EditCandidateRequest;
 use App\Job;
+use App\Candidate;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\EditCandidateRequest;
 
 class CandidateController extends Controller
 {
@@ -21,11 +20,7 @@ class CandidateController extends Controller
     {
         $this->authorize('index', Candidate::class);
 
-        $orderBy = $request->orderBy;
-
-        if (!$orderBy) {
-            $orderBy = 'desc';
-        }
+        $orderBy = $this->sortCandidates($request);
 
         $candidate = new Candidate();
         $candidates = $candidate->orderBy('created_at', $orderBy)->get();
@@ -73,8 +68,7 @@ class CandidateController extends Controller
     {
         $this->authorize('update', $candidate);
 
-        $candidate->name = $request->get('name');
-        $candidate->email = $request->get('email');
+        $candidate->fill($request->all());
         $candidate->save();
 
         return redirect()->route('candidates.show', compact('candidate'));
@@ -106,11 +100,9 @@ class CandidateController extends Controller
      */
     public function candidatesJobIndex(Request $request, Job $job)
     {
-        $orderBy = $request->orderBy;
-        if (!$orderBy) {
-            $orderBy = 'desc';
-        }
-        $candidates = $job->candidates()->orderBy('created_at', $orderBy)->get();
+        $order_by = $this->sortCandidates($request);
+
+        $candidates = $job->candidates()->orderBy('created_at', $order_by)->get();
         return view('candidates.candidatesJob', compact('candidates', 'job'));
     }
 
@@ -122,12 +114,21 @@ class CandidateController extends Controller
      */
     public function search(Request $request)
     {
-        $keyWord = $request->keyWord;
+        $key_word = $request->keyWord;
 
-        $jobs = Job::searchJobCandidates($keyWord);
-
-        //$jobs = Job::with('candidates')->where('title', 'LIKE', "%$keyWord%")->get();
+        $jobs = Job::searchJobCandidates($key_word);
 
         return view('candidates.search', compact('jobs'));
+    }
+
+    /**
+     * Set sorting order for candidates
+     *
+     * @param Request $request
+     * @return mixed|string
+     */
+    protected function sortCandidates(Request $request)
+    {
+        return $request->orderBy ? $request->orderBy : 'desc';
     }
 }

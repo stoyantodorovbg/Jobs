@@ -17,7 +17,9 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password',
+        'name',
+        'email',
+        'password'
     ];
 
     /**
@@ -62,14 +64,14 @@ class User extends Authenticatable
     /**
      * Check if a user has a role
      *
-     * @param string $roleName
+     * @param string $role_name
      * @return bool
      */
-    public function hasRole(string $roleName)
+    public function hasRole(string $role_name)
     {
         foreach ($this->roles()->get() as $role)
         {
-            if ($role->name == $roleName)
+            if ($role->name == $role_name)
             {
                 return true;
             }

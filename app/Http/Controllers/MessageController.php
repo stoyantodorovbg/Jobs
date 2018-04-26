@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\User;
 use App\Http\Models\Message;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class MessageController extends Controller
 {
@@ -41,9 +40,7 @@ class MessageController extends Controller
      */
     public function store(Request $request)
     {
-        $message = new Message();
-        $message->content = $request->get('content');
-        $message->save();
+        $message = Message::create($request->all());
 
         $message->users()->attach(User::find($request->receiver_id), ['is_received' => 1]);
         $message->users()->attach(auth()->user()->id, ['is_sent' => 1]);
@@ -61,38 +58,4 @@ class MessageController extends Controller
     {
         return view('messages.show', compact('message'));
     }
-
-//    /**
-//     * Show the form for editing the specified resource.
-//     *
-//     * @param  int  $id
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function edit($id)
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Update the specified resource in storage.
-//     *
-//     * @param  \Illuminate\Http\Request  $request
-//     * @param  int  $id
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function update(Request $request, $id)
-//    {
-//        //
-//    }
-//
-//    /**
-//     * Remove the specified resource from storage.
-//     *
-//     * @param  int  $id
-//     * @return \Illuminate\Http\Response
-//     */
-//    public function destroy($id)
-//    {
-//        //
-//    }
 }

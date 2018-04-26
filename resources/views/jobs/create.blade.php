@@ -55,8 +55,8 @@
 
     // set marker coordinates in the request
     function getCoordinates() {
-        var latlng = marker.getPosition();
-        document.getElementById('coordinates').setAttribute('value', latlng.lat().toFixed(6) + ', ' + latlng.lng().toFixed(6));
+        var lat_lng = marker.getPosition();
+        document.getElementById('coordinates').setAttribute('value', lat_lng.lat().toFixed(6) + ', ' + lat_lng.lng().toFixed(6));
     }
 
 </script>

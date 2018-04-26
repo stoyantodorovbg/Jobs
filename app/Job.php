@@ -6,7 +6,17 @@ use Illuminate\Database\Eloquent\Model;
 
 class Job extends Model
 {
-    protected $fillable = ['title', 'description'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array
+     */
+    protected $fillable = [
+        'title',
+        'description',
+        'coordinates',
+        'user_id',
+    ];
 
     /**
      * Get the candidates who belong to a job.
@@ -31,13 +41,13 @@ class Job extends Model
     /**
      * Search for job candidates by position, for which they applied
      *
-     * @param string $keyWord
+     * @param string $key_word
      * @return \Illuminate\Database\Eloquent\Collection|static[]
      */
-    public static function searchJobCandidates(string $keyWord)
+    public static function searchJobCandidates(string $key_word)
     {
         return static::with('candidates')
-            ->where('title', 'LIKE', "%$keyWord%")
+            ->where('title', 'LIKE', "%$key_word%")
             ->get();
     }
 
@@ -64,9 +74,10 @@ class Job extends Model
      */
     public static function searchJobsByKeyWord(array $filters)
     {
-        $keyWord = $filters['keyWord'];
-        return static::where('title', 'LIKE', "%$keyWord%")
-            ->orWhere('description', 'LIKE', "%$keyWord%")
+        $key_word = $filters['keyWord'];
+
+        return static::where('title', 'LIKE', "%$key_word%")
+            ->orWhere('description', 'LIKE', "%$key_word%")
             ->orderBy($filters['orderColumn'], $filters['orderBy'])
             ->paginate($filters['resultsCount']);
     }

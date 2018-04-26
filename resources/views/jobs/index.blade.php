@@ -16,16 +16,15 @@
 
     <br>
 
-    <form action="{{ route('jobs.search', ['orderBy' => 'asc']) }}"
+    <form action="{{ route('jobs.search') }}"
           method="post"
     >
-
         {!! csrf_field() !!}
 
         <label>Order by last update date</label>
-        <select name="orderBy">
-            <option>asc</option>
+        <select name="orderBy" value="desc">
             <option>desc</option>
+            <option>asc</option>
         </select>
         <br>
         <label>Order by rating</label>
@@ -151,8 +150,8 @@
 
         return google.maps.geometry.poly.containsLocation(coordinate, polygon);
     }
-
 </script>
+
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8&libraries=geometry&callback=initMap">
 </script>

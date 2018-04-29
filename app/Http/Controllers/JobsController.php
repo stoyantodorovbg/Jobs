@@ -112,10 +112,9 @@ class JobsController extends Controller
      */
     public function apply(ApplyForJobRequest $request, Job $job)
     {
-        $filename = $this->uploadImage($request, $job);
-
         $candidate = Candidate::make($request->all());
-        $candidate->photo = $filename;
+
+        $candidate->photo = $this->uploadImage($request, $job);
         $candidate->employerEmail = $job->user->email;
 
         $job->candidates()->save($candidate);

@@ -33,6 +33,8 @@ Route::resource('jobs', 'JobsController');
 
 Route::resource('candidates', 'CandidateController');
 
+Route::resource('advertisements', 'AdvertisementController');
+
 Route::resource('messages', 'MessageController');
 
 Auth::routes();

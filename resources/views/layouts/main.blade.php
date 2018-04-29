@@ -52,6 +52,14 @@
 @show
 
 @section('nav')
+    <a href="{{ route('advertisements.index') }}">
+        All advertisements
+    </a>
+
+    <a href="{{ route('advertisements.create') }}">
+        Create an advertisement
+    </a>
+
     @can('create', App\Job::class)
         <a href="{{ route('jobs.create') }}">
             Create a job advertisement

@@ -63,9 +63,17 @@
 @endsection
 
 <script>
-    polygon = '';
+    /**
+     * Initialize the map
+     */
+    var area_coordinates = [];
+
+    @if($advertisement->preferred_area)
+    // the distributor's area coordinates
+    area_coordinates = JSON.parse('{!! json_encode($advertisement->preferred_area) !!}');
+    @endif
     function initMap() {
-        var sofia = { lat: 42.698334, lng: 23.319941 };
+        var sofia = {lat: 42.698334, lng: 23.319941};
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 10,
             center: sofia
@@ -74,12 +82,12 @@
         var area_coordinates = [];
 
         @if ($advertisement->preferred_area)
-            var coordinates_string = {!! json_encode($advertisement->preferred_area) !!};
-            var coordinates_arr = extractCoordinates(coordinates_string);
+        var coordinates_string = {!! json_encode($advertisement->preferred_area) !!};
+        var coordinates_arr = extractCoordinates(coordinates_string);
 
-            for (var coordinate of coordinates_arr) {
-                area_coordinates.push(new google.maps.LatLng(coordinate[0], coordinate[1]))
-            }
+        for (var coordinate of coordinates_arr) {
+            area_coordinates.push(new google.maps.LatLng(coordinate[0], coordinate[1]))
+        }
         @else
             area_coordinates = [
             new google.maps.LatLng(42.698334, 23.319941),
@@ -109,35 +117,34 @@
 
         polygon.setMap(map);
 
-        google.maps.event.addListener(map, 'click', function(event) {
+        google.maps.event.addListener(map, 'click', function (event) {
             marker = new google.maps.Marker({
                 position: event.latLng,
                 map: map
             });
         });
 
-        var marker, coordinates;
+    }
 
-        // convert a string to a matrix
-        function extractCoordinates(coordinates)
-        {
-            var rows = coordinates.split(";\r\n");
-            return rows.map(function (row) {
-                return row.split(',');
-            })
+    var marker, coordinates;
+
+    // convert a string to a matrix
+    function extractCoordinates(coordinates)
+    {
+        var rows = coordinates.split(";\r\n");
+        return rows.map(function (row) {
+            return row.split(',');
+        })
+    }
+
+    // set search area input
+    function searchJobAreaInput() {
+        var number_of_coordinates = polygon.getPath().getLength(),
+            string = '';
+        for (var i = 0; i < number_of_coordinates - 1; i++) {
+            string += polygon.getPath().getAt(i).toUrlValue(6) + ';\n';
         }
-
-        // set search area input
-        function searchJobAreaInput() {
-            var number_of_coordinates = polygon.getPath().getLength(),
-                string = '';
-
-            for (var i = 0; i < number_of_coordinates; i++) {
-                string += polygon.getPath().getAt(i).toUrlValue(6) + ';\n';
-            }
-
-            document.getElementById('search_area').textContent = string;
-        }
+        document.getElementById('search_area').textContent = string;
     }
 </script>
 <script async defer

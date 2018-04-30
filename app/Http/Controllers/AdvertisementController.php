@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Models\Advertisement;
 use Illuminate\Http\Request;
+use App\Http\Models\Advertisement;
 
 class AdvertisementController extends Controller
 {
@@ -45,7 +45,7 @@ class AdvertisementController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Advertisement  $advertisement
+     * @param Advertisement $advertisement
      * @return \Illuminate\Http\Response
      */
     public function show(Advertisement $advertisement)
@@ -56,7 +56,7 @@ class AdvertisementController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Advertisement  $advertisement
+     * @param Advertisement $advertisement
      * @return \Illuminate\Http\Response
      */
     public function edit(Advertisement $advertisement)
@@ -67,8 +67,8 @@ class AdvertisementController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Advertisement  $advertisement
+     * @param  \Illuminate\Http\Request $request
+     * @param Advertisement $advertisement
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Advertisement $advertisement)
@@ -82,13 +82,43 @@ class AdvertisementController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Advertisement  $advertisement
+     * @param Advertisement $advertisement
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function destroy(Advertisement $advertisement)
     {
         $advertisement->delete();
 
         return redirect()->route('advertisements.index');
+    }
+
+    /**
+     * Find advertisements which prefer the job location
+     *
+     * @param string $location
+     * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
+     */
+    public function advertisementsForLocation(string $location)
+    {
+        $advertisement = new Advertisement();
+        $advertisements = $advertisement->findByPreferredLocation($this->getJobCoordinates($location));
+
+        return view('advertisements.index', compact('advertisements'));
+    }
+
+    /**
+     * Convert job coordinates to an array with keys lat and lng
+     *
+     * @param string $location
+     * @return array
+     */
+    protected function getJobCoordinates(string $location )
+    {
+        $location_arr = explode(', ', $location);
+        return [
+            'lat' => $location_arr[0],
+            'lng' => $location_arr[1]
+        ];
     }
 }

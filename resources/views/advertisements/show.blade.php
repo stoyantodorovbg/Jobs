@@ -48,7 +48,7 @@
 <script>
     polygon = '';
     function initMap() {
-        var sofia = { lat: 42.698334, lng: 23.319941 };
+        var sofia = {lat: 42.698334, lng: 23.319941};
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 10,
             center: sofia
@@ -85,23 +85,21 @@
 
         polygon.setMap(map);
 
-        google.maps.event.addListener(map, 'click', function(event) {
+        google.maps.event.addListener(map, 'click', function (event) {
             marker = new google.maps.Marker({
                 position: event.latLng,
                 map: map
             });
         });
+    }
 
-        var marker, coordinates, coordinates_arr;
-
-        // convert a string to a matrix
-        function extractCoordinates(coordinates)
-        {
-            var rows = coordinates.split(";\r\n");
-            return rows.map(function (row) {
-                return row.split(',');
-            })
-        }
+    // convert a string to a matrix
+    function extractCoordinates(coordinates)
+    {
+        var rows = coordinates.split(";\r\n");
+        return rows.map(function (row) {
+            return row.split(',');
+        })
     }
 </script>
 

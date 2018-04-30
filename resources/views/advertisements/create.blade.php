@@ -55,19 +55,22 @@
 @endsection
 
 <script>
-    polygon = '';
+    // initializes the map on the #map div
     function initMap() {
-        var sofia = { lat: 42.698334, lng: 23.319941 };
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 10,
-            center: sofia
-        });
-
+        //Initialize the map
         var area_coordinates = [
             new google.maps.LatLng(42.698334, 23.319941),
             new google.maps.LatLng(42.656023, 23.365434),
             new google.maps.LatLng(42.657129, 23.282088)
         ];
+
+        var element = document.getElementById('map'),
+            map_options = {
+                zoom: 11,
+                center: {lat: 42.698334, lng: 23.319941}, // Sofia city center
+                mapTypeId: 'terrain'
+            },
+            map = new google.maps.Map(element, map_options);
 
         // Construct the polygon.
         polygon = new google.maps.Polygon({
@@ -82,38 +85,30 @@
         });
 
         // add some event listeners
-        google.maps.event.addListener(polygon, "dragend", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "insert_at", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "remove_at", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "set_at", searchJobAreaInput);
+        google.maps.event.addListener(polygon, "dragend", searchPreferredAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "insert_at", searchPreferredAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "remove_at", searchPreferredAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "set_at", searchPreferredAreaInput);
 
         polygon.setMap(map);
+    }
 
-        google.maps.event.addListener(map, 'click', function(event) {
-            marker = new google.maps.Marker({
-                position: event.latLng,
-                map: map
-            });
-        });
+    // get the area coordinates
+    function getAreaCoordinates() {
+        // for creating a new area assign default coordinates
+        if ( ! area_coordinates.length ) {
+            area_coordinates = [
+                new google.maps.LatLng(42.698334, 23.319941),
+                new google.maps.LatLng(42.656023, 23.365434),
+                new google.maps.LatLng(42.657129, 23.282088)
+            ];
+        }
 
-        var marker;
-        var coordinates;
-        var coordinates_arr;
-
-        {{--@foreach ($jobs as $job)--}}
-            {{--coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(', ');--}}
-        {{--coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};--}}
-        {{--marker = new google.maps.Marker({--}}
-            {{--position: coordinates,--}}
-            {{--map: map--}}
-        {{--});--}}
-        {{--@endforeach--}}
-
-
+        return area_coordinates;
     }
 
     // set search area input
-    function searchJobAreaInput() {
+    function searchPreferredAreaInput() {
         var number_of_coordinates = polygon.getPath().getLength(),
             string = '';
 

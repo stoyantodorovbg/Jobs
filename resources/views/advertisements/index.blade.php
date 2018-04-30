@@ -15,7 +15,7 @@
 @section('content')
     <h1>Worker advertisements: </h1>
 
-    @foreach ($advertisements as $advertisement)
+    @forelse ($advertisements as $advertisement)
         <section id="job{{ $advertisement->id }}">
             Advertisement title: {{ $advertisement->title }}
             <br>
@@ -30,6 +30,8 @@
             ---------------------
             <br>
         </section>
-    @endforeach
+    @empty
+        <h3>There is not advertisements, which prefer this job location</h3>
+    @endforelse
 
 @endsection

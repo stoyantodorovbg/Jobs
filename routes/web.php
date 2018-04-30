@@ -29,6 +29,9 @@ Route::get('/users/{user}', 'UserController@show')->name('users.show')->middlewa
 Route::get('/users/{user}/edit', 'UserController@edit')->name('users.edit')->middleware('verifyUser');
 Route::put('/users/{user}', 'UserController@update')->name('users.update')->middleware('verifyUser');
 
+Route::get('/advertisements/{location}/location', 'AdvertisementController@advertisementsForLocation')
+     ->name('advertisements.findByPreferredLocation');
+
 Route::resource('jobs', 'JobsController');
 
 Route::resource('candidates', 'CandidateController');

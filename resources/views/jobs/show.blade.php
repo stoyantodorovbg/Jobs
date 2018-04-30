@@ -25,6 +25,10 @@
     Author's email: {{ $job->user->email }}
     <br>
 
+    <a href="{{ route('advertisements.findByPreferredLocation', ['location' => $job->coordinates]) }}">Search for advertisements which prefer this job location</a>
+
+    <br>
+
     <div id="map" style="width: 400px; height: 300px"></div>
 
     @can('update', $job)

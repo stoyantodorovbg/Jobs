@@ -165,7 +165,6 @@ class JobsController extends Controller
         return view('jobs.index', compact('jobs'));
     }
 
-
     /**
      * Display all job locations
      *

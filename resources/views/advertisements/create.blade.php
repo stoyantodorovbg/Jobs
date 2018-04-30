@@ -20,11 +20,11 @@
         <input type="hidden" name="_token" value="{{ csrf_token() }}">
         <label>Author's name: </label>
         <input type="text" name="author_name">
+        <br>
         <label>Author's email: </label>
-        <br>
         <input type="text" name="author_email">
-        <label>Title: </label>
         <br>
+        <label>Title: </label>
         <input type="text" name="title">
         <br>
         <label>Description: </label>
@@ -33,7 +33,17 @@
         <label>Content: </label>
         <textarea name="content">
         </textarea>
-        {{--<input type="hidden" name="coordinates" id="coordinates">--}}
+        <br>
+        Coordinates of preferred area:
+        <textarea
+                name="preferred_area"
+                id="search_area"
+                style="width: 200px; height: 200px"
+        >
+
+        </textarea>
+        <div id="map" style="width: 400px; height: 300px"></div>
+        <input type="hidden" name="coordinates" id="coordinates">
 
         <input type="submit" onclick='getCoordinates()' value="Create">
     </form>
@@ -45,13 +55,39 @@
 @endsection
 
 <script>
-    // initializes the map on the #map div
+    polygon = '';
     function initMap() {
         var sofia = { lat: 42.698334, lng: 23.319941 };
         var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 9,
+            zoom: 10,
             center: sofia
         });
+
+        var area_coordinates = [
+            new google.maps.LatLng(42.698334, 23.319941),
+            new google.maps.LatLng(42.656023, 23.365434),
+            new google.maps.LatLng(42.657129, 23.282088)
+        ];
+
+        // Construct the polygon.
+        polygon = new google.maps.Polygon({
+            paths: area_coordinates,
+            draggable: true,
+            editable: true,
+            strokeColor: '#FF0000',
+            strokeOpacity: 0.8,
+            strokeWeight: 1,
+            fillColor: '#FF0000',
+            fillOpacity: 0.35
+        });
+
+        // add some event listeners
+        google.maps.event.addListener(polygon, "dragend", searchJobAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "insert_at", searchJobAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "remove_at", searchJobAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "set_at", searchJobAreaInput);
+
+        polygon.setMap(map);
 
         google.maps.event.addListener(map, 'click', function(event) {
             marker = new google.maps.Marker({
@@ -59,16 +95,37 @@
                 map: map
             });
         });
+
+        var marker;
+        var coordinates;
+        var coordinates_arr;
+
+        {{--@foreach ($jobs as $job)--}}
+            {{--coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(', ');--}}
+        {{--coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};--}}
+        {{--marker = new google.maps.Marker({--}}
+            {{--position: coordinates,--}}
+            {{--map: map--}}
+        {{--});--}}
+        {{--@endforeach--}}
+
+
     }
 
-    // set marker coordinates in the request
-    function getCoordinates() {
-        var lat_lng = marker.getPosition();
-        document.getElementById('coordinates').setAttribute('value', lat_lng.lat().toFixed(6) + ', ' + lat_lng.lng().toFixed(6));
+    // set search area input
+    function searchJobAreaInput() {
+        var number_of_coordinates = polygon.getPath().getLength(),
+            string = '';
+
+        for (var i = 0; i < number_of_coordinates; i++) {
+            string += polygon.getPath().getAt(i).toUrlValue(6) + ';\n';
+        }
+
+        document.getElementById('search_area').textContent = string;
     }
 
 </script>
 <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8&callback=initMap">
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8&libraries=geometry&callback=initMap">
 </script>
 

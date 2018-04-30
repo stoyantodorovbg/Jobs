@@ -93,20 +93,6 @@
         polygon.setMap(map);
     }
 
-    // get the area coordinates
-    function getAreaCoordinates() {
-        // for creating a new area assign default coordinates
-        if ( ! area_coordinates.length ) {
-            area_coordinates = [
-                new google.maps.LatLng(42.698334, 23.319941),
-                new google.maps.LatLng(42.656023, 23.365434),
-                new google.maps.LatLng(42.657129, 23.282088)
-            ];
-        }
-
-        return area_coordinates;
-    }
-
     // set search area input
     function searchPreferredAreaInput() {
         var number_of_coordinates = polygon.getPath().getLength(),

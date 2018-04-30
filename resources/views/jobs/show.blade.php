@@ -87,6 +87,7 @@
 @endsection
 
 <script>
+    // initializes the map on the #map div
     function initMap() {
         var coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(', ');
         var coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};

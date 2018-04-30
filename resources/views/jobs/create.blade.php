@@ -37,6 +37,8 @@
 @endsection
 
 <script>
+    var marker;
+
     // initializes the map on the #map div
     function initMap() {
         var sofia = { lat: 42.698334, lng: 23.319941 };
@@ -45,7 +47,13 @@
             center: sofia
         });
 
+        marker = new google.maps.Marker({
+            position: sofia,
+            map: map
+        });
+
         google.maps.event.addListener(map, 'click', function(event) {
+            marker.setMap(null);
             marker = new google.maps.Marker({
                 position: event.latLng,
                 map: map

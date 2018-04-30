@@ -91,6 +91,13 @@
         google.maps.event.addListener(polygon.getPath(), "set_at", searchPreferredAreaInput);
 
         polygon.setMap(map);
+
+        google.maps.event.addListener(map, 'click', function (event) {
+            marker = new google.maps.Marker({
+                position: event.latLng,
+                map: map
+            });
+        });
     }
 
     // set search area input

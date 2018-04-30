@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Models\Advertisement;
+use App\Http\Requests\AdvertisementRequest;
 
 class AdvertisementController extends Controller
 {
@@ -31,10 +32,10 @@ class AdvertisementController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param AdvertisementRequest $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(AdvertisementRequest $request)
     {
         $advertisement = Advertisement::make($request->all());
         $advertisement->save();

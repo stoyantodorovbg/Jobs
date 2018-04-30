@@ -57,9 +57,6 @@
         <li>{{ $error }}</li>
     @endforeach
 
-
-
-
 @endsection
 
 <script>
@@ -126,7 +123,7 @@
 
     }
 
-    var marker, coordinates;
+    //var marker, coordinates;
 
     // convert a string to a matrix
     function extractCoordinates(coordinates)

@@ -37,18 +37,22 @@
 
     <div id="address_location"></div>
 
+    <button onClick="getLocationByAddress()">Enter an address to point a location</button>
+    <input type="text" id="address" value="Bulgaria, ">
+
 @endsection
 
 <script>
-    var marker;
-
     // initializes the map on the #map div
+    var marker, map;
+
     function initMap() {
         var sofia = { lat: 42.698334, lng: 23.319941 };
-        var map = new google.maps.Map(document.getElementById('map'), {
+        map = new google.maps.Map(document.getElementById('map'), {
             zoom: 9,
             center: sofia
         });
+
 
         marker = new google.maps.Marker({
             position: sofia,
@@ -79,6 +83,27 @@
             function (data) {
                 var address = data['results'][0]['formatted_address'];
                 $('#address_location').text(address);
+            });
+    }
+
+    // Get the job location by entered address
+    function getLocationByAddress() {
+        var address_input = $('#address').val();
+        $.get(`https://maps.googleapis.com/maps/api/geocode/json?address=${address_input}, 2&region=es&key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8`,
+            function (data) {
+            var lat = data['results'][0]['geometry']['location']['lat'];
+            var lng = data['results'][0]['geometry']['location']['lng'];
+                var location = {
+                    lat: lat,
+                    lng: lng,
+                };
+                marker.setMap(null);
+                marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+
+                displayAddress([lat, lng]);
             });
     }
 

@@ -31,6 +31,11 @@
 
     <div id="map" style="width: 400px; height: 300px"></div>
 
+    <div id="address_location"></div>
+
+    <button onclick="displayAddress()">Display the address of this location</button>
+
+
     @can('update', $job)
         <br>
         <a href="{{ route('jobs.edit', ['job' => $job->id]) }}">Edit</a>
@@ -84,13 +89,18 @@
         <li>{{ $error }}</li>
     @endforeach
 
+    <a href="https://maps.googleapis.com/maps/api/geocode/json?latlng=40.714224,-73.961452&key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8">
+        Click to see the address of this location
+    </a>
+
 @endsection
 
 <script>
+    var coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(', '),
+        coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};
+
     // initializes the map on the #map div
     function initMap() {
-        var coordinates_arr = JSON.parse('{!! json_encode($job->coordinates) !!}').split(', ');
-        var coordinates = {lat: Number(coordinates_arr[0]), lng: Number(coordinates_arr[1])};
         var map = new google.maps.Map(document.getElementById('map'), {
             zoom: 15,
             center: coordinates
@@ -98,6 +108,15 @@
         var marker = new google.maps.Marker({
             position: coordinates,
             map: map
+        });
+    }
+
+    // Get and display the address of the job location
+    function displayAddress() {
+        $.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates_arr[0]},${coordinates_arr[1]}&key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8`,
+        function (data) {
+            var address = data['results'][0]['formatted_address'];
+            $('#address_location').text(address);
         });
     }
 </script>

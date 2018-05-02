@@ -45,7 +45,7 @@
         <div id="map" style="width: 400px; height: 300px"></div>
         <input type="hidden" name="coordinates" id="coordinates">
 
-        <input type="submit" onclick='getCoordinates()' value="Create">
+        <input type="submit" value="Create">
     </form>
 
     @foreach ($errors->all() as $error)
@@ -85,10 +85,10 @@
         });
 
         // add some event listeners
-        google.maps.event.addListener(polygon, "dragend", searchPreferredAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "insert_at", searchPreferredAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "remove_at", searchPreferredAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "set_at", searchPreferredAreaInput);
+        google.maps.event.addListener(polygon, "dragend", setPreferredAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "insert_at", setPreferredAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "remove_at", setPreferredAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "set_at", setPreferredAreaInput);
 
         polygon.setMap(map);
 
@@ -101,7 +101,7 @@
     }
 
     // set search area input
-    function searchPreferredAreaInput() {
+    function setPreferredAreaInput() {
         var number_of_coordinates = polygon.getPath().getLength(),
             string = '';
 
@@ -111,7 +111,6 @@
 
         document.getElementById('search_area').textContent = string;
     }
-
 </script>
 <script async defer
         src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8&libraries=geometry&callback=initMap">

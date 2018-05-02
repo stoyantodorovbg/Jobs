@@ -37,6 +37,8 @@
 
         <div id="map" style="width: 400px; height: 300px"></div>
 
+        <div id="address_location"></div>
+
     @foreach ($errors->all() as $error)
         <li>{{ $error }}</li>
     @endforeach
@@ -65,13 +67,25 @@
                 position: event.latLng,
                 map: map
             });
+            displayAddress([event.latLng.lat(), event.latLng.lng()])
         });
+
+        displayAddress([42.698334, 23.319941]);
     }
 
     // set marker coordinates in the request
     function getCoordinates() {
         var lat_lng = marker.getPosition();
         document.getElementById('coordinates').setAttribute('value', lat_lng.lat().toFixed(6) + ', ' + lat_lng.lng().toFixed(6));
+    }
+
+    // Get and display the address of the job location
+    function displayAddress(coordinates_arr) {
+        $.get(`https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates_arr[0]},${coordinates_arr[1]}&key=AIzaSyCYzPJTTEOvCXyFKHw_kswbeFYzpfHIXJ8`,
+            function (data) {
+                var address = data['results'][0]['formatted_address'];
+                $('#address_location').text(address);
+            });
     }
 </script>
 

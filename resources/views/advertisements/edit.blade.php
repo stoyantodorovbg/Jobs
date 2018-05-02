@@ -60,42 +60,23 @@
 @endsection
 
 <script>
+    var area_coordinates = [];
+
     /**
      * Initialize the map
      */
-    var area_coordinates = [];
-
-    @if($advertisement->preferred_area)
-    // the distributor's area coordinates
-    area_coordinates = JSON.parse('{!! json_encode($advertisement->preferred_area) !!}');
-    @endif
     function initMap() {
-        var sofia = {lat: 42.698334, lng: 23.319941};
-        var map = new google.maps.Map(document.getElementById('map'), {
-            zoom: 10,
-            center: sofia
-        });
-
-        var area_coordinates = [];
-
-        @if ($advertisement->preferred_area)
-        var coordinates_string = {!! json_encode($advertisement->preferred_area) !!};
-        var coordinates_arr = extractCoordinates(coordinates_string);
-
-        for (var coordinate of coordinates_arr) {
-            area_coordinates.push(new google.maps.LatLng(coordinate[0], coordinate[1]))
-        }
-        @else
-            area_coordinates = [
-            new google.maps.LatLng(42.698334, 23.319941),
-            new google.maps.LatLng(42.656023, 23.365434),
-            new google.maps.LatLng(42.657129, 23.282088)
-        ];
-        @endif
+        var element = document.getElementById('map'),
+            map_options = {
+                zoom: 10,
+                center: {lat: 42.698334, lng: 23.319941}, // Sofia city center
+                mapTypeId: 'terrain'
+            },
+            map = new google.maps.Map(element, map_options);
 
         // Construct the polygon.
         polygon = new google.maps.Polygon({
-            paths: area_coordinates,
+            paths: getAreaCoordinates(),
             draggable: true,
             editable: true,
             strokeColor: '#FF0000',
@@ -106,10 +87,10 @@
         });
 
         // add some event listeners
-        google.maps.event.addListener(polygon, "dragend", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "insert_at", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "remove_at", searchJobAreaInput);
-        google.maps.event.addListener(polygon.getPath(), "set_at", searchJobAreaInput);
+        google.maps.event.addListener(polygon, "dragend", setPreferredAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "insert_at", setPreferredAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "remove_at", setPreferredAreaInput);
+        google.maps.event.addListener(polygon.getPath(), "set_at", setPreferredAreaInput);
 
 
         polygon.setMap(map);
@@ -120,27 +101,35 @@
                 map: map
             });
         });
-
     }
 
-    //var marker, coordinates;
+    // get the coordinates of the preferred area
+    function getAreaCoordinates() {
+        @if ($advertisement->preferred_area)
+            var coordinates = JSON.parse('{!! json_encode($advertisement->getAreaCoordinates()) !!}');
+            for (var coordinate of coordinates) {
+                area_coordinates.push(new google.maps.LatLng(coordinate['lat'], coordinate['lng']))
+            }
+        @else
+            area_coordinates = [
+            new google.maps.LatLng(42.698334, 23.319941),
+            new google.maps.LatLng(42.656023, 23.365434),
+            new google.maps.LatLng(42.657129, 23.282088)
+        ];
+        @endif
 
-    // convert a string to a matrix
-    function extractCoordinates(coordinates)
-    {
-        var rows = coordinates.split(";\r\n");
-        return rows.map(function (row) {
-            return row.split(',');
-        })
+        return area_coordinates;
     }
 
     // set search area input
-    function searchJobAreaInput() {
+    function setPreferredAreaInput() {
         var number_of_coordinates = polygon.getPath().getLength(),
             string = '';
-        for (var i = 0; i < number_of_coordinates - 1; i++) {
+
+        for (var i = 0; i < number_of_coordinates; i++) {
             string += polygon.getPath().getAt(i).toUrlValue(6) + ';\n';
         }
+
         document.getElementById('search_area').textContent = string;
     }
 </script>

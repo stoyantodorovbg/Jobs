@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Job create
+@endsection
+
 @section('nav')
 
     @parent

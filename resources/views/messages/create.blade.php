@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Message create
+@endsection
+
 @section('nav')
 
     @parent

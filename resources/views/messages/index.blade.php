@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Messages index
+@endsection
+
 @section('auth')
 
     @parent

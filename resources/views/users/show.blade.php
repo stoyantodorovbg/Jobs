@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    User show
+@endsection
+
 @section('nav')
 
     @parent

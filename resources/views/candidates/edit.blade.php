@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Candidate edit
+@endsection
+
 @section('nav')
 
     @parent

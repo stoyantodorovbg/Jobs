@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Users index
+@endsection
+
 @section('nav')
 
     @parent

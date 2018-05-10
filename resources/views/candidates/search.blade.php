@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Candidates search
+@endsection
+
 @section('nav')
 
     @parent

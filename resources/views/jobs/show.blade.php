@@ -1,6 +1,10 @@
 
 @extends('layouts.main')
 
+@section('title')
+    Job show
+@endsection
+
 @section('nav')
 
     @parent

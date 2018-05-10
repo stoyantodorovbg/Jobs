@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Message show
+@endsection
+
 @section('auth')
 
     @parent

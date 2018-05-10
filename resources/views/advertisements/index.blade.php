@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Advertisements index
+@endsection
+
 @section('auth')
 
     @parent

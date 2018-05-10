@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Jobs index
+@endsection
+
 @section('auth')
 
     @parent

@@ -1,5 +1,9 @@
 @extends('layouts.main')
 
+@section('title')
+    Advertisement create
+@endsection
+
 @section('nav')
 
     @parent

@@ -1,6 +1,10 @@
 
 @extends('layouts.main')
 
+@section('title')
+    Advertisement show
+@endsection
+
 @section('nav')
 
     @parent

@@ -7,10 +7,10 @@
 @endsection
 
 @section('nav')
-    <a href="{{ route('jobs.create') }}">
+    <a class="navbar-brand" href="{{ route('jobs.create') }}">
         Create a job advertisement
     </a>
-    <a href="{{ route('jobs.index') }}">
+    <a class="navbar-brand" href="{{ route('jobs.index') }}">
         All job advertisements
     </a>
 @endsection

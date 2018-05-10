@@ -9,7 +9,7 @@
 
 @section('nav')
     @parent
-    <a href="{{ route('jobs.index') }}">All job advertisements</a>
+    <a class="navbar-brand" href="{{ route('jobs.index') }}">All job advertisements</a>
 @endsection
 
 @section('content')

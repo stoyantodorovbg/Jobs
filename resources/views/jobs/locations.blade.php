@@ -13,8 +13,6 @@
 @endsection
 
 @section('content')
-
-
     <br>
     <div id="map" style="width: 400px; height: 300px"></div>
     <button onclick="displaySelectedJobs()">Display selected jobs</button>

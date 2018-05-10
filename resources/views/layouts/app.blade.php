@@ -10,8 +10,16 @@
 
     <title>{{ config('app.name', 'Laravel') }}</title>
 
+    <!--jQuery -->
+    <script src="{!! asset('js/jquery-3.3.1.min.js') !!}"></script>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="{!! asset('css/bootstrap.min.css') !!}" >
+    <link rel="stylesheet" href="{!! asset('css/bootstrap-theme.min.css') !!}">
+    <script src="{!! asset('js/bootstrap.min.js') !!}"></script>
+
     <!-- Styles -->
-    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link href="{!! asset('css/app.css') !!}" rel="stylesheet">
 </head>
 <body>
     <div id="app">

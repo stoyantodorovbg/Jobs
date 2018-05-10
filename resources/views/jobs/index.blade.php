@@ -16,41 +16,42 @@
 
     <br>
 
-    <form action="{{ route('jobs.search') }}"
+    <form class="navbar-form navbar-left" role="search"  action="{{ route('jobs.search') }}"
           method="post"
     >
         {!! csrf_field() !!}
-
-        <label>Order by last update date</label>
-        <select name="orderBy" value="desc">
-            <option>desc</option>
-            <option>asc</option>
-        </select>
-        <br>
-        <label>Order by rating</label>
-        <input type="checkbox" name="rating">
-        <br>
-        <label>Results per page </label>
-        <select name="resultsCount">
-            <option>10</option>
-            <option>4</option>
-        </select>
-        <br>
-        <label>Search by key word</label>
-        <input type="text" name="keyWord">
-        <br>
-        <label>Search by title</label>
-        <input type="text" name="title">
-        <br>
-        <input type="submit" value="Search">
+        <div class="form-group">
+            <label>Order by last update date</label>
+            <select class="form-control"name="orderBy" value="desc">
+                <option>desc</option>
+                <option>asc</option>
+            </select>
+            <br>
+            <label>Order by rating</label>
+            <input class="form-control" type="checkbox" name="rating">
+            <br>
+            <label>Results per page </label>
+            <select class="form-control" name="resultsCount">
+                <option>10</option>
+                <option>4</option>
+            </select>
+            <br>
+            <label>Search by key word</label>
+            <input class="form-control" type="text" name="keyWord">
+            <br>
+            <label>Search by title</label>
+            <input class="form-control" type="text" name="title">
+            </div>
+            <br>
+        <input class="btn btn-default" type="submit" value="Search">
     </form>
 
     <br>
     <div id="map" style="width: 400px; height: 300px"></div>
-    <input type="hidden" name="coordinates" id="coordinates">
-    <button onclick="hideOuterJobs()">Filter jobs on this page by location</button>
+        <input type="hidden" name="coordinates" id="coordinates">
+    <button class="btn btn-default" onclick="hideOuterJobs()">Filter jobs on this page by location</button>
     <a href="{{ route('jobs.locations') }}">
-        <button>View all job locations</button>
+        <button class="btn btn-default">View all job locations</button>
     </a>
     <br>
     <h1>Job advertisements: </h1>
